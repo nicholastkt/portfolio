@@ -139,7 +139,7 @@ footer {
 .modal-content {
   width: 500px;
   padding: 20px;
-  background: white;
+  background: #fafae7;
   border-radius: 8px;
   transform-style: preserve-3d;
   transform: rotateY(90deg);
@@ -151,6 +151,16 @@ footer {
 .modal.show .modal-content {
   transform: rotateY(0deg);
   opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    display: block;
+  }
+  .modal-content {
+    width: 90%;
+    padding: 10px;
+  }
 }
 
 /* When modal is open, blur the main content */
