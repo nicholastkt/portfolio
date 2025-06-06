@@ -122,7 +122,7 @@ footer {
 
 #openModal:hover {
   background-color: #4d4a3d;
-  color: #f5f5f4;
+  color: #fafae7;
 }
 
 /* Flip animation container */
@@ -137,7 +137,7 @@ footer {
 
 /* Flip content */
 .modal-content {
-  width: 300px;
+  width: 500px;
   padding: 20px;
   background: white;
   border-radius: 8px;

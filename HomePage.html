@@ -7,51 +7,58 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div class="grid-profile-top">
-      <div class="image-wrapper">
-        <img src="assets/ProfilePic.jpeg" alt="Nicholas Tan" class="circular-img">
+  <div id="pageContent">
+    <header>
+      <div class="grid-profile-top">
+        <div class="image-wrapper">
+          <img src="assets/ProfilePic.jpeg" alt="Nicholas Tan" class="circular-img">
+        </div>
+        <div>
+          <h1>Nicholas Tan</h1>
+          UI/UX enthusiast & Automation Developer
+          <br>
+          <!-- Trigger Button -->
+          <button id="openModal">My Name Card</button>
+        </div>
       </div>
-      <div>
-        <h1>Nicholas Tan</h1>
-        UI/UX enthusiast & Automation Developer
-        <br>
-        <!-- Trigger Button -->
-        <button id="openModal">My Name Card</button>
+    </header>
+
+
+    <section class="about">
+      <h2>About Me</h2>
+      <p>Hello! I'm an aspiring UI/UX developer with 5 years background in financal processes, RPA, and Data Analytics. Previously working on automation projects, I have recently found an interest in designing interactive website and applications.
+      <br>
+      <br>This page serves as my notes for my learning thus far as well as a portfolio to showcase what I have learned in my journey.</br>
+      <br>I am fluent in .Net, Microsoft VBA and Python, and is able to fully understand Java scripts. I am hoping to hone my skills in HTML/CSS and implement advanced tools in my work with Node.Js or React
+      </p>
+    </section>
+
+    <section class="projects">
+      <h2>Projects</h2>
+      <div class="project">
+        <h3>Project 1</h3>
+        <a href="SubPages/Project-1.html" class = "btn">Explore</a>
+        <p>An animated page that showcases smooth transition of elements as the page is explored.</p>
       </div>
-    </div>
-  </header>
 
+      <div class="project">
+        <h3>UI Redesign for School Portal</h3>
+        <img src="assets/project2.png" alt="School Portal Redesign" />
+        <p>A UI revamp prototype made in Figma based on user feedback from education staff.</p>
+        <a href="#">View Design</a>
+      </div>
+    </section>
 
-  <section class="about">
-    <h2>About Me</h2>
-    <p>Hello! I'm an aspiring UI/UX developer with 5 years background in financal processes, RPA, and Data Analytics. Previously working on automation projects, I have recently found an interest in designing interactive website and applications.
-    <br>
-    <br>This page serves as my notes for my learning thus far as well as a portfolio to showcase what I have learned in my journey.</br>
-    <br>I am fluent in .Net, Microsoft VBA and Python, and is able to fully understand Java scripts. I am hoping to hone my skills in HTML/CSS and implement advanced tools in my work with Node.Js or React
-    </p>
-  </section>
+    <section class="contact">
+      <h2>Contact</h2>
+      <p>Email: you@example.com | <a href="https://linkedin.com/in/yourprofile">LinkedIn</a></p>
+    </section>
 
-  <section class="projects">
-    <h2>Projects</h2>
-    <div class="project">
-      <h3>Project 1</h3>
-      <a href="SubPages/Project-1.html" class = "btn">Explore</a>
-      <p>An animated page that showcases smooth transition of elements as the page is explored.</p>
-    </div>
-
-    <div class="project">
-      <h3>UI Redesign for School Portal</h3>
-      <img src="assets/project2.png" alt="School Portal Redesign" />
-      <p>A UI revamp prototype made in Figma based on user feedback from education staff.</p>
-      <a href="#">View Design</a>
-    </div>
-  </section>
-
-  <section class="contact">
-    <h2>Contact</h2>
-    <p>Email: you@example.com | <a href="https://linkedin.com/in/yourprofile">LinkedIn</a></p>
-  </section>
+    
+    <footer>
+      <p>&copy; 2025 Your Name</p>
+    </footer>
+  </div>
 
   <div id="myModal" class="modal">
     <div class="modal-content">
@@ -63,9 +70,7 @@
       <p><a href="https://www.linkedin.com/in/nicholas-tan-0204/">https://www.linkedin.com/in/nicholas-tan-0204/</a></p>
     </div>
   </div>
-  <footer>
-    <p>&copy; 2025 Your Name</p>
-  </footer>
+  
   <script>
     const modal = document.getElementById("myModal");
     const modalContent = modal.querySelector(".modal-content");
