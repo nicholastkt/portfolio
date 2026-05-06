@@ -22,8 +22,8 @@
   <section id="hero">
     <!-- Particle canvas will be injected here by JS -->
     <div class="hero-tag">Available for opportunities</div>
-    <h1>Hi, I'm <span>Nicholas Tan</span>.<br>Automation Developer / Process Analyst & UI/UX Developer wannabe.</h1>
-    <p class="hero-sub">An experienced automation developer and process analyst with a keen interest in UI/UX design. I love creating efficient solutions and intuitive user experiences.</p>
+    <h1>Hi, I'm <span>Nicholas Tan</span>.<br>Automation Developer / Process Analyst & aspiring UI/UX Developer.</h1>
+    <p class="hero-sub">An experienced automation developer and process analyst with a keen interest in UI/UX design, I am passionate in creating efficient solutions and intuitive user experiences.</p>
     <div class="hero-cta">
       <a href="projects.html" class="btn btn-primary">View my work</a>
       <a href="resume.html" class="btn btn-outline">View resume</a>
@@ -37,8 +37,8 @@
     <div class="about-grid">
       <div class="about-text">
         <h2>Crafting interfaces with purpose.</h2>
-        <p>Apart from developing automated solutions, I am also constantly exploring the world of UI/UX design on my free time.</p>
-        <p>I am fluent in HTML/CSS and is currently exploring the interesting world of p5.js.</p>
+        <p>Apart from developing automated solutions, I also have a personal interest in exploring the world of UI/UX design</p>
+        <p>I am fluent in HTML/CSS and am currently exploring the interesting world of p5.js.</p>
         <p>My goal is to combine my technical skills with my passion for design to create user-friendly interfaces that are both functional and visually appealing.</p>
       </div>
       <div>
@@ -201,6 +201,7 @@
       requestAnimationFrame(animate);
       rotY += 0.002;
       particles.rotation.y = rotY;
+      particles.rotation.x = -0.8
       plane.normal.copy(cam.position).normalize();
 
       const localMouse = mouse3D.clone();
