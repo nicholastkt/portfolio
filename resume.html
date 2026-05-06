@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume — Nicholas Tan</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="resume.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  async function downloadPDF() {
+    const btn = document.querySelector('.btn-primary');
+    btn.textContent = 'Generating...';
+    btn.disabled = true;
+
+    const { jsPDF } = window.jspdf;
+    const element = document.querySelector('.page-wrap');
+
+    const canvas = await html2canvas(element, {
+      scale: 2,           // higher = sharper
+      useCORS: true,
+      backgroundColor: '#ffffff'
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+    const imgW = pageW;
+    const imgH = (canvas.height * imgW) / canvas.width;
+
+    // Handle multi-page if content is long
+    let yPos = 0;
+    while (yPos < imgH) {
+      pdf.addImage(imgData, 'PNG', 0, -yPos, imgW, imgH);
+      yPos += pageH;
+      if (yPos < imgH) pdf.addPage();
+    }
+
+    pdf.save('Nicholas_Tan_Resume.pdf');
+
+    btn.textContent = '⬇ Download PDF';
+    btn.disabled = false;
+  }
+</script>
+<body>
+  <nav>
+    <a href="index.html" class="nav-logo">Nicholas Tan</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="resume.html" class="active">Resume</a>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- HEADER -->
+    <div class="resume-header">
+      <div class="resume-header-text">
+        <p class="section-label">Resume</p>
+        <div class="divider"></div>
+        <h1><span>Nicholas</span> Tan</h1>
+        <p class="resume-title">MSc Data Analytics · UiPath · Power Automate · Power BI · Python</p>
+        <p class="resume-location">📍 Singapore</p>
+        <div class="resume-contacts">
+          <a href="tel:+60192770886" class="contact-chip">📞 +65 8269-7279</a>
+          <a href="mailto:nicholastkt04@outlook.com" class="contact-chip">✉️ nicholastkt04@outlook.com</a>
+          <a href="https://www.linkedin.com/in/nicholastan-0204" target="_blank" class="contact-chip">in LinkedIn</a>
+        </div>
+        <div style="margin-top: 1.5rem; display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="downloadPDF()">⬇ Download PDF</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-body">
+
+      <!-- LEFT COLUMN -->
+      <div class="resume-left">
+
+        <!-- SUMMARY -->
+        <div class="resume-section">
+          <h3 class="res-heading">Summary</h3>
+          <p class="res-text">A seasoned RPA Developer proficient in UiPath/Power Platforms as well as VB.Net and Python, leveraging a strong foundation in navigating complex processes. Expertise in process understanding and standardisation, identifying redundant processes and implementing effective improvements. Completed 8 medium to high complexity projects, driving significant cost reductions while maintaining seamless stakeholder management end to end.</p>
+        </div>
+
+        <!-- EXPERIENCE -->
+        <div class="resume-section">
+          <h3 class="res-heading">Experience</h3>
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <p class="exp-role">Automation Lead, Finance</p>
+                <p class="exp-company">Ngee Ann Polytechnic</p>
+              </div>
+              <span class="exp-date">Feb 2025 – Present</span>
+            </div>
+            <p class="exp-location">Singapore</p>
+            <p style = "font-size:14px;">Web development</p>
+            <ul class="exp-list">
+              <li>Redesigned and Developed Intranet for improved user experience and user interface with HTML/CSS</li>
+              <li>Led end-to-end development of documentation hubs that improved team adoption and accelerated knowledge access across Finance stakeholders</li>
+            </ul>
+            <p style = "font-size:14px;">Automation and Digitalisation</p>
+            <ul class="exp-list">
+              <li>Process Understanding, Standardisation, Documentation and Development</li>
+              <li>Acted as a trusted technology advisor to business users, assessing requirements and recommending fit-for-purpose solutions across a broad technology stack beyond RPA</li>
+              <li>Partnered closely with Finance business users to define project requirements, translate needs into technical deliverables, and align expectations throughout each project</li>
+              <li>Collectively reduced departmental man-hours by ~316 hours (~39 working days) annually</li>
+            </ul>
+            <p style = "font-size:14px;">Project Management</p>
+            <ul class="exp-list">
+              <li>Managed full project lifecycle for development initiatives (both web development and automation projects) — from requirements gathering and scoping to delivery — ensuring on-time execution across multiple concurrent projects</li>
+              <li>Partnered closely with Finance business users to define project requirements, translate needs into technical deliverables, and align expectations throughout each project</li>
+            </ul>
+            <p>Stakeholder Management</p>
+            <ul class="exp-list">
+              <li>Served as the primary point of contact for Finance stakeholders across web development projects, facilitating regular check-ins and translating business needs into actionable development plans</li>
+              <li>Proactively communicated project timelines, progress, and risks to Finance teams, ensuring alignment and reducing back-and-forth during delivery</li>
+              <li>Development of Power BI Dashboardto enhance data visualization and reporting capabilities</li>
+            <ul>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <p class="exp-role">Senior Executive, Finance Process Transformation</p>
+                <p class="exp-company">DKSH</p>
+              </div>
+              <span class="exp-date">Oct 2022 – Jan 2025</span>
+            </div>
+            <p class="exp-location">Kuala Lumpur, Malaysia</p>
+            <ul class="exp-list">
+              <li>Advanced UiPath (StudioPro, Orchestrator, Document Understanding)</li>
+              <li>Advanced Power Automate (Desktop and Cloud)</li>
+              <li>Advanced Regex for complex string manipulation and document processing</li>
+              <li>Advanced VBA scripting for data ETL processes within Excel</li>
+              <li>HTML/CSS for web-based automation; VB.Net for SAP automations</li>
+              <li>GitHub repository management for version controlling</li>
+              <li>Microsoft SQL Server for data management and archiving</li>
+              <li>Power BI for project performance reporting and tracking</li>
+            </ul>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <p class="exp-role">RPA Developer</p>
+                <p class="exp-company">AGOS Asia</p>
+              </div>
+              <span class="exp-date">Mar 2021 – Oct 2022</span>
+            </div>
+            <p class="exp-location">Malaysia</p>
+            <ul class="exp-list">
+              <li>RPA development in UiPath and Power Automate (incl. WinAutomation)</li>
+              <li>Completed 7 automation processes, primarily within UiPath</li>
+              <li>Integration of Excel VBA in RPA workflows</li>
+              <li>Power BI dashboards — 7 created including P2P, I2C, R2R, and KPI tracking</li>
+              <li>Basic to intermediate IT infrastructure (SSL setup, firewall whitelisting)</li>
+            </ul>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-header">
+              <div>
+                <p class="exp-role">Data Analytics & Machine Learning Intern</p>
+                <p class="exp-company">Digital Care Systems Limited</p>
+              </div>
+              <span class="exp-date">Jul – Oct 2020</span>
+            </div>
+            <p class="exp-location">Belfast, Northern Ireland, UK</p>
+            <ul class="exp-list">
+              <li>Image recognition on CT scans using Python ML (Keras, TensorFlow)</li>
+              <li>Cloud data pipeline construction via Microsoft Azure</li>
+              <li>Data wrangling and EDA with R and Python (Pandas, NumPy, Matplotlib)</li>
+              <li>Model evaluation, transfer learning, and hyperparameter tuning</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- EDUCATION -->
+        <div class="resume-section">
+          <h3 class="res-heading">Education</h3>
+          <div class="edu-item">
+            <p class="exp-role">Master's Degree — Data Analytics</p>
+            <p class="exp-company">Queen's University Belfast</p>
+            <span class="exp-date">2019 – 2020</span>
+          </div>
+          <div class="edu-item">
+            <p class="exp-role">Bachelor's Degree — Accounting</p>
+            <p class="exp-company">Queen's University Belfast</p>
+            <span class="exp-date">2017 – 2019</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="resume-right">
+
+        <!-- TOP SKILLS -->
+        <div class="resume-section">
+          <h3 class="res-heading">Top Skills</h3>
+          <div class="skills-grid">
+            <span class="skill-tag">Robotic Process Automation</span>
+            <span class="skill-tag">UiPath</span>
+            <span class="skill-tag">Power Automate</span>
+            <span class="skill-tag">VB.Net</span>
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">HTML / CSS</span>
+            <span class="skill-tag">VBA / Excel</span>
+            <span class="skill-tag">Power BI</span>
+            <span class="skill-tag">Microsoft SQL</span>
+            <span class="skill-tag">Machine Learning</span>
+            <span class="skill-tag">Data Analytics</span>
+            <span class="skill-tag">GitHub</span>
+          </div>
+        </div>
+
+        <!-- LANGUAGES -->
+        <div class="resume-section">
+          <h3 class="res-heading">Languages</h3>
+          <div class="lang-list">
+            <div class="lang-item">
+              <span>Mandarin</span>
+              <span class="lang-level">Native</span>
+            </div>
+            <div class="lang-item">
+              <span>English</span>
+              <span class="lang-level">Native</span>
+            </div>
+            <div class="lang-item">
+              <span>Cantonese</span>
+              <span class="lang-level">Limited Working</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CERTIFICATIONS -->
+        <div class="resume-section">
+          <h3 class="res-heading">Certifications</h3>
+          <ul class="cert-list">
+            <li>Diploma of Completion: RPA Developer Advanced</li>
+            <li>Machine Learning with the Experts: School Budgets</li>
+            <li>Unsupervised Learning in R</li>
+            <li>Image Processing in Python</li>
+            <li>Case Study: Exploratory Data Analysis in R</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 Nicholas Tan · Built with care ✦</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+/* HEADER */
+.resume-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+.resume-title {
+  font-size: 15px; color: var(--text-muted); margin-bottom: 0.4rem; margin-top: 0.5rem;
+}
+.resume-location { font-size: 14px; color: var(--text-muted); margin-bottom: 1.25rem; }
+.resume-contacts { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact-chip {
+  padding: 6px 14px; border: 1px solid var(--border); border-radius: 20px;
+  font-size: 13px; text-decoration: none; color: var(--text-muted); transition: all 0.2s;
+}
+.contact-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+/* TWO-COLUMN LAYOUT */
+.resume-body {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* SECTIONS */
+.resume-section { margin-bottom: 2.5rem; }
+.res-heading {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 1rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.res-text { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+/* EXPERIENCE */
+.exp-item { margin-bottom: 1.75rem; }
+.exp-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 1rem; margin-bottom: 0.2rem;
+}
+.exp-role { font-weight: 600; font-size: 14px; }
+.exp-company { font-size: 13px; color: var(--accent); margin-top: 2px; }
+.exp-date {
+  font-size: 12px; color: var(--text-muted);
+  white-space: nowrap; padding-top: 2px;
+}
+.exp-location { font-size: 12px; color: var(--text-muted); margin-bottom: 0.6rem; }
+.exp-list {
+  padding-left: 1.1rem; display: flex; flex-direction: column; gap: 4px;
+}
+.exp-list li { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+/* EDUCATION */
+.edu-item { margin-bottom: 1.25rem; }
+
+/* LANGUAGES */
+.lang-list { display: flex; flex-direction: column; gap: 10px; }
+.lang-item {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px;
+}
+.lang-level {
+  font-size: 11px; font-weight: 500;
+  background: var(--accent-light); color: var(--accent);
+  padding: 2px 8px; border-radius: 4px;
+}
+
+/* CERTIFICATIONS */
+.cert-list {
+  padding-left: 1.1rem; display: flex; flex-direction: column; gap: 8px;
+}
+.cert-list li { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+@media (max-width: 680px) {
+  .resume-body { grid-template-columns: 1fr; }
+  .exp-header { flex-direction: column; gap: 4px; }
+}

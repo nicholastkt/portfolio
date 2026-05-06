@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nicholas Tan — Automation Developer / Process Analyst</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Nicholas Tan</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="resume.html">Resume</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <!-- Particle canvas will be injected here by JS -->
+    <div class="hero-tag">Available for opportunities</div>
+    <h1>Hi, I'm <span>Nicholas Tan</span>.<br>Automation Developer / Process Analyst & UI/UX Developer wannabe.</h1>
+    <p class="hero-sub">An experienced automation developer and process analyst with a keen interest in UI/UX design. I love creating efficient solutions and intuitive user experiences.</p>
+    <div class="hero-cta">
+      <a href="projects.html" class="btn btn-primary">View my work</a>
+      <a href="resume.html" class="btn btn-outline">View resume</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <p class="section-label">About me</p>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>Crafting interfaces with purpose.</h2>
+        <p>Apart from developing automated solutions, I am also constantly exploring the world of UI/UX design on my free time.</p>
+        <p>I am fluent in HTML/CSS and is currently exploring the interesting world of p5.js.</p>
+        <p>My goal is to combine my technical skills with my passion for design to create user-friendly interfaces that are both functional and visually appealing.</p>
+      </div>
+      <div>
+        <div class="avatar-wrap">👤</div>
+        <p class="section-label" style="margin-bottom: 0.75rem;">Skills & tools</p>
+        <div class="skills-grid">
+          <span class="skill-tag">UiPath</span>
+          <span class="skill-tag">Power Automate / Power Platform</span>
+          <span class="skill-tag">Power BI</span>
+          <span class="skill-tag">VBA / Macros</span>
+          <span class="skill-tag">HTML / CSS</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">p5.js</span>
+          <span class="skill-tag">OpenProcessing</span>
+          <span class="skill-tag">UI Design</span>
+          <span class="skill-tag">Prototyping</span>
+          <span class="skill-tag">Process Improvement</span>
+          <span class="skill-tag">Project Management</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Nicholas Tan · Built with care ✦</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const hero = document.getElementById('hero');
+
+    // --- SCENE SETUP ---
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(60, hero.offsetWidth / hero.offsetHeight, 0.1, 100);
+    cam.position.z = 6;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(devicePixelRatio);
+    renderer.setSize(hero.offsetWidth, hero.offsetHeight);
+
+    // Style the canvas to sit absolutely inside #hero
+    const canvas = renderer.domElement;
+    canvas.id = 'hero-particle-bg';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '0';
+    canvas.style.pointerEvents = 'none';
+
+    // Insert as first child so it sits behind hero content
+    hero.insertBefore(canvas, hero.firstChild);
+
+    // --- CIRCLE SPRITE ---
+    const spriteCanvas = document.createElement('canvas');
+    spriteCanvas.width = spriteCanvas.height = 64;
+    const sCtx = spriteCanvas.getContext('2d');
+    sCtx.beginPath();
+    sCtx.arc(32, 32, 30, 0, Math.PI * 2);
+    sCtx.fillStyle = '#ffffff';
+    sCtx.fill();
+    const sprite = new THREE.CanvasTexture(spriteCanvas);
+
+    // --- SAMPLE GEOMETRY ---
+    function sampleGeometry(geo, count) {
+      const pts = [];
+      const pos = geo.attributes.position;
+      const idx = geo.index;
+      const tris = [];
+      if (idx) {
+        for (let i = 0; i < idx.count; i += 3)
+          tris.push([idx.getX(i), idx.getX(i+1), idx.getX(i+2)]);
+      } else {
+        for (let i = 0; i < pos.count; i += 3)
+          tris.push([i, i+1, i+2]);
+      }
+      const _vA = new THREE.Vector3(), _vB = new THREE.Vector3(), _vC = new THREE.Vector3();
+      const _pt = new THREE.Vector3();
+      const areas = tris.map(([a, b, c]) => {
+        _vA.fromBufferAttribute(pos, a);
+        _vB.fromBufferAttribute(pos, b);
+        _vC.fromBufferAttribute(pos, c);
+        return new THREE.Triangle(_vA.clone(), _vB.clone(), _vC.clone()).getArea();
+      });
+      const totalArea = areas.reduce((s, a) => s + a, 0);
+      const cumulative = [];
+      areas.reduce((s, a, i) => { cumulative[i] = s + a; return s + a; }, 0);
+      for (let i = 0; i < count; i++) {
+        const r = Math.random() * totalArea;
+        let ti = cumulative.findIndex(c => c >= r);
+        if (ti < 0) ti = tris.length - 1;
+        const [a, b, c] = tris[ti];
+        _vA.fromBufferAttribute(pos, a);
+        _vB.fromBufferAttribute(pos, b);
+        _vC.fromBufferAttribute(pos, c);
+        const r1 = Math.sqrt(Math.random()), r2 = Math.random();
+        const ba = 1 - r1, bb = r1 * (1 - r2), bc = r1 * r2;
+        _pt.set(
+          ba * _vA.x + bb * _vB.x + bc * _vC.x,
+          ba * _vA.y + bb * _vB.y + bc * _vC.y,
+          ba * _vA.z + bb * _vB.z + bc * _vC.z
+        );
+        pts.push(_pt.x, _pt.y, _pt.z);
+      }
+      return pts;
+    }
+
+    // --- BUILD TORUS PARTICLES ---
+    const COUNT = 12000;
+    const geo = new THREE.TorusGeometry(1.8, 0.7, 64, 128);
+    const sampled = sampleGeometry(geo, COUNT);
+    const homePositions = new Float32Array(sampled);
+    const positions = new Float32Array(sampled);
+    const velocities = new Float32Array(COUNT * 3);
+    const colors = new Float32Array(COUNT * 3);
+
+    for (let i = 0; i < COUNT; i++) {
+      const t = i / COUNT;
+      const col = new THREE.Color();
+      col.setHSL(0.62 + t * 0.12, 0.75, 0.70 + t * 0.2);
+      colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
+    }
+
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const mat = new THREE.PointsMaterial({
+      size: 0.02, vertexColors: true, transparent: true,
+      opacity: 0.8, sizeAttenuation: true, depthWrite: false,
+      map: sprite, alphaTest: 0.1,
+    });
+
+    const particles = new THREE.Points(pGeo, mat);
+    scene.add(particles);
+
+    // --- MOUSE ---
+    const mouse3D = new THREE.Vector3(9999, 9999, 9999);
+    const raycaster = new THREE.Raycaster();
+    const mousePx = new THREE.Vector2();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    hero.addEventListener('mousemove', e => {
+      const rect = hero.getBoundingClientRect();
+      mousePx.set(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+       -((e.clientY - rect.top) / rect.height) * 2 + 1
+      );
+      raycaster.setFromCamera(mousePx, cam);
+      const target = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, target);
+      mouse3D.copy(target).applyMatrix4(particles.matrixWorld.clone().invert());
+    });
+    hero.addEventListener('mouseleave', () => mouse3D.set(9999, 9999, 9999));
+
+    // --- ANIMATION ---
+    let rotY = 0;
+    function animate() {
+      requestAnimationFrame(animate);
+      rotY += 0.002;
+      particles.rotation.y = rotY;
+      plane.normal.copy(cam.position).normalize();
+
+      const localMouse = mouse3D.clone();
+      const pos = particles.geometry.attributes.position;
+
+      for (let i = 0; i < COUNT; i++) {
+        const ix = i*3, iy = ix+1, iz = ix+2;
+        const px = positions[ix], py = positions[iy], pz = positions[iz];
+        const hx = homePositions[ix], hy = homePositions[iy], hz = homePositions[iz];
+        const dx = px - localMouse.x, dy = py - localMouse.y, dz = pz - localMouse.z;
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (dist < 1.2 && dist > 0.001) {
+          const f = ((1.2 - dist) / 1.2) * 0.4 / dist;
+          velocities[ix] += dx * f; velocities[iy] += dy * f; velocities[iz] += dz * f;
+        }
+        velocities[ix] += (hx - px) * 0.08;
+        velocities[iy] += (hy - py) * 0.08;
+        velocities[iz] += (hz - pz) * 0.08;
+        velocities[ix] *= 0.82; velocities[iy] *= 0.82; velocities[iz] *= 0.82;
+        positions[ix] += velocities[ix];
+        positions[iy] += velocities[iy];
+        positions[iz] += velocities[iz];
+      }
+
+      pos.needsUpdate = true;
+      renderer.render(scene, cam);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      cam.aspect = hero.offsetWidth / hero.offsetHeight;
+      cam.updateProjectionMatrix();
+      renderer.setSize(hero.offsetWidth, hero.offsetHeight);
+    });
+  </script>
+
+</body>
+</html>

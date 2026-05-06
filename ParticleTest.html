@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Particle Explorer — Nicholas Tan</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #0a0a0f; overflow: hidden; }
+
+    canvas { position: fixed; top: 60px; left: 0; width: 100%; height: calc(100vh - 60px); }
+
+    nav {
+      background: rgba(10, 10, 15, 0.85) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+    }
+    .nav-logo, .nav-links a { color: rgba(255,255,255,0.6) !important; }
+    .nav-links a:hover, .nav-links a.active { color: #5B8DEF !important; }
+
+    #ui {
+      position: fixed; top: 84px; left: 24px;
+      color: rgba(255,255,255,0.6); font-size: 13px;
+      display: flex; flex-direction: column; gap: 14px;
+      z-index: 10;
+    }
+    .ctrl { display: flex; flex-direction: column; gap: 4px; }
+    .ctrl label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .ctrl input[type=range] { width: 140px; accent-color: #5B8DEF; }
+
+    #shape-btns { display: flex; gap: 8px; }
+    .sbtn {
+      padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.15); background: transparent;
+      color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s;
+    }
+    .sbtn.active, .sbtn:hover { border-color: #5B8DEF; color: #5B8DEF; background: rgba(91,141,239,0.1); }
+
+    #hint {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.25); font-size: 12px; letter-spacing: 0.05em;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Nicholas Tan</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="projects.html">Projects</a>
+      <a href="resume.html">Resume</a>
+    </div>
+  </nav>
+
+  <div id="ui">
+    <div class="ctrl">
+      <label>Shape</label>
+      <div id="shape-btns">
+        <button class="sbtn active" data-shape="sphere">Sphere</button>
+        <button class="sbtn" data-shape="torus">Torus</button>
+        <button class="sbtn" data-shape="box">Box</button>
+      </div>
+    </div>
+    <div class="ctrl">
+      <label>Particle Count</label>
+      <input type="range" id="countSlider" min="2000" max="20000" step="1000" value="15000">
+      <span id="countVal">15000</span>
+    </div>
+    <div class="ctrl">
+      <label>Repel Radius</label>
+      <input type="range" id="radiusSlider" min="0.3" max="3" step="0.1" value="1.2">
+    </div>
+    <div class="ctrl">
+      <label>Repel Strength</label>
+      <input type="range" id="strengthSlider" min="0.1" max="1" step="0.05" value="0.4">
+    </div>
+    <div class="ctrl">
+      <label>Particle Size</label>
+      <input type="range" id="sizeSlider" min="1" max="6" step="0.5" value="4">
+    </div>
+  </div>
+
+  <p id="hint">Move mouse over the shape · Scroll to zoom · Click & drag to rotate</p>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // --- SCENE SETUP ---
+    const scene = new THREE.Scene();
+    const cam = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+    cam.position.z = 6;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(devicePixelRatio);
+    renderer.setSize(innerWidth, innerHeight - 60);
+    renderer.domElement.style.position = 'fixed';
+    renderer.domElement.style.top = '60px';
+    renderer.domElement.style.left = '0';
+    document.body.appendChild(renderer.domElement);
+
+    // --- STATE ---
+    let mouse3D = new THREE.Vector3(9999, 9999, 9999);
+    let repelRadius = 1.2, repelStrength = 0.4, particleSize = 4;
+    let currentShape = 'sphere', particleCount = 15000;
+    let particles, positions, velocities, homePositions, colors;
+    let rotY = 0, rotX = 0;
+    let isDragging = false, prevMouse = { x: 0, y: 0 };
+    let autoRotate = true;
+
+    // --- CIRCLE SPRITE ---
+    const spriteCanvas = document.createElement('canvas');
+    spriteCanvas.width = spriteCanvas.height = 64;
+    const sCtx = spriteCanvas.getContext('2d');
+    sCtx.beginPath();
+    sCtx.arc(32, 32, 30, 0, Math.PI * 2);
+    sCtx.fillStyle = '#ffffff';
+    sCtx.fill();
+    const sprite = new THREE.CanvasTexture(spriteCanvas);
+
+    // --- SAMPLE POINTS ON GEOMETRY ---
+    function sampleGeometry(geo, count) {
+      const pts = [];
+      const pos = geo.attributes.position;
+      const idx = geo.index;
+
+      const tris = [];
+      if (idx) {
+        for (let i = 0; i < idx.count; i += 3)
+          tris.push([idx.getX(i), idx.getX(i+1), idx.getX(i+2)]);
+      } else {
+        for (let i = 0; i < pos.count; i += 3)
+          tris.push([i, i+1, i+2]);
+      }
+
+      const _vA = new THREE.Vector3(), _vB = new THREE.Vector3(), _vC = new THREE.Vector3();
+      const _pt = new THREE.Vector3();
+
+      const areas = tris.map(([a, b, c]) => {
+        _vA.fromBufferAttribute(pos, a);
+        _vB.fromBufferAttribute(pos, b);
+        _vC.fromBufferAttribute(pos, c);
+        return new THREE.Triangle(_vA.clone(), _vB.clone(), _vC.clone()).getArea();
+      });
+      const totalArea = areas.reduce((s, a) => s + a, 0);
+      const cumulative = [];
+      areas.reduce((s, a, i) => { cumulative[i] = s + a; return s + a; }, 0);
+
+      for (let i = 0; i < count; i++) {
+        const r = Math.random() * totalArea;
+        let ti = cumulative.findIndex(c => c >= r);
+        if (ti < 0) ti = tris.length - 1;
+        const [a, b, c] = tris[ti];
+        _vA.fromBufferAttribute(pos, a);
+        _vB.fromBufferAttribute(pos, b);
+        _vC.fromBufferAttribute(pos, c);
+        const r1 = Math.sqrt(Math.random()), r2 = Math.random();
+        const ba = 1 - r1, bb = r1 * (1 - r2), bc = r1 * r2;
+        _pt.set(
+          ba * _vA.x + bb * _vB.x + bc * _vC.x,
+          ba * _vA.y + bb * _vB.y + bc * _vC.y,
+          ba * _vA.z + bb * _vB.z + bc * _vC.z
+        );
+        pts.push(_pt.x, _pt.y, _pt.z);
+      }
+      return pts;
+    }
+
+    // --- BUILD PARTICLE SYSTEM ---
+    function buildParticles(shape, count) {
+      if (particles) scene.remove(particles);
+
+      let geo;
+      if (shape === 'sphere') geo = new THREE.SphereGeometry(2, 64, 64);
+      else if (shape === 'torus') geo = new THREE.TorusGeometry(1.8, 0.7, 64, 128);
+      else geo = new THREE.BoxGeometry(3, 3, 3, 20, 20, 20);
+
+      const sampled = sampleGeometry(geo, count);
+      homePositions = new Float32Array(sampled);
+      positions = new Float32Array(sampled);
+      velocities = new Float32Array(count * 3);
+      colors = new Float32Array(count * 3);
+
+      // Greyscale — light grey to near white
+      for (let i = 0; i < count; i++) {
+        const t = i / count;
+        const col = new THREE.Color();
+        const l = 0.7 + t * 0.20;
+        col.setHSL(0, 0, l);
+        colors[i*3]   = col.r;
+        colors[i*3+1] = col.g;
+        colors[i*3+2] = col.b;
+      }
+
+      const pGeo = new THREE.BufferGeometry();
+      pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const mat = new THREE.PointsMaterial({
+        size: particleSize * 0.01,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        sizeAttenuation: true,
+        depthWrite: false,
+        map: sprite,
+        alphaTest: 0.1,
+      });
+
+      particles = new THREE.Points(pGeo, mat);
+      scene.add(particles);
+    }
+
+    buildParticles(currentShape, particleCount);
+
+    // --- MOUSE → 3D ---
+    const raycaster = new THREE.Raycaster();
+    const mousePx = new THREE.Vector2();
+    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
+    window.addEventListener('mousemove', e => {
+      mousePx.set(
+        (e.clientX / innerWidth) * 2 - 1,
+       -((e.clientY - 60) / (innerHeight - 60)) * 2 + 1
+      );
+      raycaster.setFromCamera(mousePx, cam);
+      const target = new THREE.Vector3();
+      raycaster.ray.intersectPlane(plane, target);
+      mouse3D.copy(target).applyMatrix4(particles.matrixWorld.clone().invert());
+
+      if (isDragging) {
+        const dx = e.clientX - prevMouse.x;
+        const dy = e.clientY - prevMouse.y;
+        rotY += dx * 0.005;
+        rotX += dy * 0.005;
+        prevMouse = { x: e.clientX, y: e.clientY };
+        autoRotate = false;
+      }
+    });
+
+    window.addEventListener('mousedown', e => {
+      isDragging = true;
+      prevMouse = { x: e.clientX, y: e.clientY };
+    });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mouseleave', () => { mouse3D.set(9999, 9999, 9999); });
+    window.addEventListener('wheel', e => {
+      cam.position.z = Math.max(3, Math.min(12, cam.position.z + e.deltaY * 0.01));
+    });
+
+    // --- UI CONTROLS ---
+    document.querySelectorAll('.sbtn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentShape = btn.dataset.shape;
+        buildParticles(currentShape, particleCount);
+        autoRotate = true;
+      });
+    });
+
+    const countSlider = document.getElementById('countSlider');
+    const countVal = document.getElementById('countVal');
+    countSlider.addEventListener('input', () => {
+      particleCount = +countSlider.value;
+      countVal.textContent = particleCount;
+      buildParticles(currentShape, particleCount);
+    });
+
+    document.getElementById('radiusSlider').addEventListener('input', e => repelRadius = +e.target.value);
+    document.getElementById('strengthSlider').addEventListener('input', e => repelStrength = +e.target.value);
+    document.getElementById('sizeSlider').addEventListener('input', e => {
+      particleSize = +e.target.value;
+      if (particles) particles.material.size = particleSize * 0.01;
+    });
+
+    // --- ANIMATION LOOP ---
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      clock.getDelta();
+
+      if (autoRotate) rotY += 0.003;
+      particles.rotation.y = rotY;
+      particles.rotation.x = rotX;
+
+      plane.normal.copy(cam.position).normalize();
+
+      const localMouse = mouse3D.clone();
+      const pos = particles.geometry.attributes.position;
+
+      for (let i = 0; i < particleCount; i++) {
+        const ix = i*3, iy = ix+1, iz = ix+2;
+        const px = positions[ix], py = positions[iy], pz = positions[iz];
+        const hx = homePositions[ix], hy = homePositions[iy], hz = homePositions[iz];
+
+        const dx = px - localMouse.x, dy = py - localMouse.y, dz = pz - localMouse.z;
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+        if (dist < repelRadius && dist > 0.001) {
+          const force = (repelRadius - dist) / repelRadius;
+          const f = force * repelStrength / dist;
+          velocities[ix] += dx * f;
+          velocities[iy] += dy * f;
+          velocities[iz] += dz * f;
+        }
+
+        velocities[ix] += (hx - px) * 0.08;
+        velocities[iy] += (hy - py) * 0.08;
+        velocities[iz] += (hz - pz) * 0.08;
+
+        velocities[ix] *= 0.82;
+        velocities[iy] *= 0.82;
+        velocities[iz] *= 0.82;
+
+        positions[ix] += velocities[ix];
+        positions[iy] += velocities[iy];
+        positions[iz] += velocities[iz];
+      }
+
+      pos.needsUpdate = true;
+      renderer.render(scene, cam);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      cam.aspect = innerWidth / (innerHeight - 60);
+      cam.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight - 60);
+    });
+  </script>
+
+</body>
+</html>
