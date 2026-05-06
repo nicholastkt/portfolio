@@ -148,7 +148,7 @@
     }
 
     // --- BUILD TORUS PARTICLES ---
-    const COUNT = 12000;
+    const COUNT = 9000;
     const geo = new THREE.TorusGeometry(1.8, 0.7, 64, 128);
     const sampled = sampleGeometry(geo, COUNT);
     const homePositions = new Float32Array(sampled);
@@ -159,7 +159,7 @@
     for (let i = 0; i < COUNT; i++) {
       const t = i / COUNT;
       const col = new THREE.Color();
-      col.setHSL(0.62 + t * 0.12, 0.75, 0.70 + t * 0.2);
+      col.setHSL(0.62 + t * 0.12, 0.75, 0.85 + t * 0.2);
       colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
     }
 
