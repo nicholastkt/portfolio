@@ -45,7 +45,7 @@ h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
 
 /* LAYOUT */
 section { max-width: 800px; margin: 0 auto; padding: 5rem 2rem; }
-.page-wrap { max-width: 800px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+.page-wrap { max-width: 800px; margin: 0 auto; padding: 2rem 2rem 2rem; }
 
 /* UTILITIES */
 .section-label {

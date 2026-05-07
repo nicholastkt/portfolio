@@ -2,7 +2,7 @@
 #hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: center;
-  padding-top: 80px;
+  padding-top: 5px;
   position: relative;
   overflow: hidden;
   z-index: 1;
