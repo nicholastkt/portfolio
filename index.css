@@ -30,8 +30,8 @@
 }
 .hero-tag {
   display: inline-block;
-  background: var(--accent-light);
-  color: var(--accent);
+  background: #bcffca;
+  color: #03831f;
   font-size: 13px; font-weight: 500;
   padding: 4px 12px;
   border-radius: 20px;

@@ -38,7 +38,7 @@
       <div class="about-text">
         <h2>Crafting interfaces with purpose.</h2>
         <p>Apart from developing automated solutions, I also have a personal interest in exploring the world of UI/UX design during my free time.</p>
-        <p>I am fluent in HTML/CSS and am currently exploring the interesting world of p5.js.</p>
+        <p><span style="font-weight: bold; color:rgb(16, 16, 133)">I am fluent in HTML/CSS</span> and am currently exploring the interesting world of p5.js.</p>
         <p>My goal is to combine my technical skills with my passion for design to create user-friendly interfaces that are both functional and visually appealing.</p>
       </div>
       <div>
@@ -61,7 +61,7 @@
       </div>
     </div>
   </section>
-
+  
   <footer>
     <p>© 2026 Nicholas Tan · Built with care ✦</p>
   </footer>
@@ -148,7 +148,7 @@
     }
 
     // --- BUILD TORUS PARTICLES ---
-    const COUNT = 9000;
+    const COUNT = 18000;
     const geo = new THREE.TorusGeometry(1.8, 0.7, 64, 128);
     const sampled = sampleGeometry(geo, COUNT);
     const homePositions = new Float32Array(sampled);
@@ -159,7 +159,7 @@
     for (let i = 0; i < COUNT; i++) {
       const t = i / COUNT;
       const col = new THREE.Color();
-      col.setHSL(0.62 + t * 0.12, 0.75, 0.65 + t * 0.2);
+      col.setHSL(0.42 + t * 0.03, 0.78, 0.85 + t * 0.1);
       colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
     }
 
@@ -199,7 +199,7 @@
     let rotY = 0;
     function animate() {
       requestAnimationFrame(animate);
-      rotY += 0.002;
+      rotY += 0.007;
       particles.rotation.y = rotY;
       particles.rotation.x = -0.8
       plane.normal.copy(cam.position).normalize();
@@ -214,7 +214,7 @@
         const dx = px - localMouse.x, dy = py - localMouse.y, dz = pz - localMouse.z;
         const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
         if (dist < 1.2 && dist > 0.001) {
-          const f = ((1.2 - dist) / 1.2) * 0.4 / dist;
+          const f = ((1.2 - dist) / 1.2) * 3.0 / dist; /*Repel Strength*/
           velocities[ix] += dx * f; velocities[iy] += dy * f; velocities[iz] += dz * f;
         }
         velocities[ix] += (hx - px) * 0.08;
