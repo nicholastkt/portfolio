@@ -6,17 +6,48 @@
   <title>Projects — Your Name</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="projects.css">
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}());</script>
 </head>
 <body>
 
   <nav>
     <a href="index.html" class="nav-logo">Nicholas Tan</a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="projects.html" class="active">Projects</a>
-      <a href="resume.html">Resume</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="resume.html">Resume</a>
+      </div>
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </button>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+  <script>
+    (function() {
+      const nav = document.querySelector('nav');
+      const burger = nav.querySelector('.nav-burger');
+      burger.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open);
+      });
+      nav.querySelectorAll('.nav-links a').forEach(a =>
+        a.addEventListener('click', () => {
+          nav.classList.remove('open');
+          burger.setAttribute('aria-expanded', false);
+        })
+      );
+      document.querySelector('.theme-toggle').addEventListener('click', () => {
+        const html = document.documentElement;
+        const isLight = html.getAttribute('data-theme') === 'light';
+        html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        localStorage.setItem('theme', isLight ? 'dark' : 'light');
+      });
+    })();
+  </script>
 
   <div class="page-wrap">
     <p class="section-label">My work</p>

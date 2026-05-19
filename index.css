@@ -30,24 +30,41 @@
 }
 .hero-tag {
   display: inline-block;
-  background: #bcffca;
-  color: #03831f;
+  background: #0d2b14;
+  color: #4ade80;
   font-size: 13px; font-weight: 500;
   padding: 4px 12px;
   border-radius: 20px;
   margin-bottom: 1.5rem;
+  margin-left: 4.0rem;
+  max-width: 300px;
+  margin-top: 20px;
 }
 .hero-sub {
   font-size: 1.1rem; color: var(--text-muted);
   max-width: 520px; margin-bottom: 2.5rem;
+  margin-left: 4rem;
 }
-.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-left: 4.0rem;}
+
+/* Gradient fade at the bottom of hero into the about section */
+#hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 280px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 2;
+}
+
+[data-theme="light"] .hero-tag { background: #bcffca; color: #03831f; }
 
 /* ABOUT */
 #about { background: var(--bg); }
 
 .about-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
+  display: grid; grid-template-columns: 300px 1fr;
   gap: 3rem; align-items: start;
 }
 .about-text p { color: var(--text-muted); margin-bottom: 1rem; }

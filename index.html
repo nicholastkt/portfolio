@@ -6,26 +6,57 @@
   <title>Nicholas Tan — Automation Developer / Process Analyst</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="index.css">
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}());</script>
 </head>
 <body>
 
   <nav>
     <a href="index.html" class="nav-logo">Nicholas Tan</a>
-    <div class="nav-links">
-      <a href="index.html" class="active">Home</a>
-      <a href="projects.html">Projects</a>
-      <a href="resume.html">Resume</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="resume.html">Resume</a>
+      </div>
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </button>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+  <script>
+    (function() {
+      const nav = document.querySelector('nav');
+      const burger = nav.querySelector('.nav-burger');
+      burger.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open);
+      });
+      nav.querySelectorAll('.nav-links a').forEach(a =>
+        a.addEventListener('click', () => {
+          nav.classList.remove('open');
+          burger.setAttribute('aria-expanded', false);
+        })
+      );
+      document.querySelector('.theme-toggle').addEventListener('click', () => {
+        const html = document.documentElement;
+        const isLight = html.getAttribute('data-theme') === 'light';
+        html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        localStorage.setItem('theme', isLight ? 'dark' : 'light');
+      });
+    })();
+  </script>
 
   <!-- HERO -->
   <section id="hero">
     <!-- Particle canvas will be injected here by JS -->
     <div class="hero-tag">Available for opportunities</div>
-    <h1>Hi, I'm <span>Nicholas Tan</span>.<br>Automation Developer / Process Analyst & aspiring UI/UX Developer.</h1>
-    <p class="hero-sub">An experienced automation developer and process analyst with a keen interest in UI/UX design, I am passionate in creating efficient solutions and intuitive user experiences.</p>
+    <h1 style="margin-left: 4rem; margin-right: 4rem;">Hi, I'm <span><br>Nicholas Tan</br></span><br>Automation Developer / Process Analyst & aspiring UI/UX Developer.</h1>
+    <p class="hero-sub" style="margin-left:4rem; margin-right: 4rem;">An experienced automation developer and process analyst with a keen interest in UI/UX design, I am passionate in creating efficient solutions and intuitive user experiences.</p>
     <div class="hero-cta">
-      <a href="projects.html" class="btn btn-primary">View my work</a>
+      <a href="projects.html" class="btn btn-outline">View my work</a>
       <a href="resume.html" class="btn btn-outline">View resume</a>
     </div>
   </section>
@@ -43,12 +74,6 @@
     <p class="section-label">About me</p>
     <div class="divider"></div>
     <div class="about-grid">
-      <div class="about-text">
-        <h2>Crafting interfaces with purpose.</h2>
-        <p>Apart from developing automated solutions, I also have a personal interest in exploring the world of UI/UX design during my free time.</p>
-        <p><span style="font-weight: bold; color:rgb(16, 16, 133)">I am fluent in HTML/CSS</span> and am currently exploring the interesting world of p5.js.</p>
-        <p>My goal is to combine my technical skills with my passion for design to create user-friendly interfaces that are both functional and visually appealing.</p>
-      </div>
       <div>
         <div class="avatar-wrap">
           <img src="assets/Photo.png" alt="PFP">
@@ -68,6 +93,12 @@
           <span class="skill-tag">Process Improvement</span>
           <span class="skill-tag">Project Management</span>
         </div>
+      </div>
+      <div class="about-text">
+        <h2>Crafting interfaces with purpose.</h2>
+        <p>Apart from developing automated solutions, I also have a personal interest in exploring the world of UI/UX design during my free time.</p>
+        <p><span style="font-weight: bold; color: var(--accent)">I am fluent in HTML/CSS</span> and am currently exploring the interesting world of p5.js.</p>
+        <p>My goal is to combine my technical skills with my passion for design to create user-friendly interfaces that are both functional and visually appealing.</p>
       </div>
     </div>
   </section>
@@ -89,7 +120,6 @@
     renderer.setPixelRatio(devicePixelRatio);
     renderer.setSize(hero.offsetWidth, hero.offsetHeight);
 
-    // Style the canvas to sit absolutely inside #hero
     const canvas = renderer.domElement;
     canvas.id = 'hero-particle-bg';
     canvas.style.position = 'absolute';
@@ -100,7 +130,6 @@
     canvas.style.zIndex = '0';
     canvas.style.pointerEvents = 'none';
 
-    // Insert as first child so it sits behind hero content
     hero.insertBefore(canvas, hero.firstChild);
 
     // --- CIRCLE SPRITE ---
@@ -113,69 +142,47 @@
     sCtx.fill();
     const sprite = new THREE.CanvasTexture(spriteCanvas);
 
-    // --- SAMPLE GEOMETRY ---
-    function sampleGeometry(geo, count) {
-      const pts = [];
-      const pos = geo.attributes.position;
-      const idx = geo.index;
-      const tris = [];
-      if (idx) {
-        for (let i = 0; i < idx.count; i += 3)
-          tris.push([idx.getX(i), idx.getX(i+1), idx.getX(i+2)]);
-      } else {
-        for (let i = 0; i < pos.count; i += 3)
-          tris.push([i, i+1, i+2]);
-      }
-      const _vA = new THREE.Vector3(), _vB = new THREE.Vector3(), _vC = new THREE.Vector3();
-      const _pt = new THREE.Vector3();
-      const areas = tris.map(([a, b, c]) => {
-        _vA.fromBufferAttribute(pos, a);
-        _vB.fromBufferAttribute(pos, b);
-        _vC.fromBufferAttribute(pos, c);
-        return new THREE.Triangle(_vA.clone(), _vB.clone(), _vC.clone()).getArea();
-      });
-      const totalArea = areas.reduce((s, a) => s + a, 0);
-      const cumulative = [];
-      areas.reduce((s, a, i) => { cumulative[i] = s + a; return s + a; }, 0);
-      for (let i = 0; i < count; i++) {
-        const r = Math.random() * totalArea;
-        let ti = cumulative.findIndex(c => c >= r);
-        if (ti < 0) ti = tris.length - 1;
-        const [a, b, c] = tris[ti];
-        _vA.fromBufferAttribute(pos, a);
-        _vB.fromBufferAttribute(pos, b);
-        _vC.fromBufferAttribute(pos, c);
-        const r1 = Math.sqrt(Math.random()), r2 = Math.random();
-        const ba = 1 - r1, bb = r1 * (1 - r2), bc = r1 * r2;
-        _pt.set(
-          ba * _vA.x + bb * _vB.x + bc * _vC.x,
-          ba * _vA.y + bb * _vB.y + bc * _vC.y,
-          ba * _vA.z + bb * _vB.z + bc * _vC.z
-        );
-        pts.push(_pt.x, _pt.y, _pt.z);
-      }
-      return pts;
+    // --- FULL-PAGE PARTICLE POSITIONS ---
+    // Compute the visible world-space extents at z=0 from the camera frustum
+    function getHalfDims() {
+      const halfH = Math.tan(THREE.MathUtils.degToRad(30)) * cam.position.z;
+      const halfW = halfH * (hero.offsetWidth / hero.offsetHeight);
+      return { halfW, halfH };
     }
 
-    // --- BUILD TORUS PARTICLES ---
-    const COUNT = 18000;
-    const geo = new THREE.TorusGeometry(1.8, 0.7, 64, 128);
-    const sampled = sampleGeometry(geo, COUNT);
-    const homePositions = new Float32Array(sampled);
-    const positions = new Float32Array(sampled);
-    const velocities = new Float32Array(COUNT * 3);
-    const colors = new Float32Array(COUNT * 3);
+    // --- MOBILE DETECTION ---
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || navigator.maxTouchPoints > 0;
 
+    // --- STARFIELD DRIFT ---
+    const DRIFT  = 0.006;  // units per frame — raise to fly faster
+    const Z_NEAR = 4.0;    // particles wrap when they reach here (2 units from cam)
+    const Z_FAR  = -10;
+    const DEPTH  = Z_NEAR - Z_FAR;
+
+    const COUNT = isMobile ? 8000 : 36000;
+    const homePositions = new Float32Array(COUNT * 3);
+    const positions     = new Float32Array(COUNT * 3);
+    const velocities    = new Float32Array(COUNT * 3);
+    const colors        = new Float32Array(COUNT * 3);
+
+    const { halfW, halfH } = getHalfDims();
     for (let i = 0; i < COUNT; i++) {
+      const x = (Math.random() * 2 - 1) * halfW;
+      const y = (Math.random() * 2 - 1) * halfH;
+      const z = Z_FAR + Math.random() * DEPTH;  // spread across full depth
+      homePositions[i*3] = positions[i*3] = x;
+      homePositions[i*3+1] = positions[i*3+1] = y;
+      homePositions[i*3+2] = positions[i*3+2] = z;
+
       const t = i / COUNT;
       const col = new THREE.Color();
-      col.setHSL(0.42 + t * 0.03, 0.78, 0.85 + t * 0.1);
+      col.setHSL(0, 0, 0.55 + t * 0.4);
       colors[i*3] = col.r; colors[i*3+1] = col.g; colors[i*3+2] = col.b;
     }
 
     const pGeo = new THREE.BufferGeometry();
     pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    pGeo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
 
     const mat = new THREE.PointsMaterial({
       size: 0.02, vertexColors: true, transparent: true,
@@ -186,45 +193,61 @@
     const particles = new THREE.Points(pGeo, mat);
     scene.add(particles);
 
-    // --- MOUSE ---
+    // --- INTERACTION (mouse on desktop, touch on mobile) ---
     const mouse3D = new THREE.Vector3(9999, 9999, 9999);
     const raycaster = new THREE.Raycaster();
-    const mousePx = new THREE.Vector2();
-    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+    const mousePx   = new THREE.Vector2();
+    const plane     = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
-    hero.addEventListener('mousemove', e => {
+    function updatePointer(clientX, clientY) {
       const rect = hero.getBoundingClientRect();
       mousePx.set(
-        ((e.clientX - rect.left) / rect.width) * 2 - 1,
-       -((e.clientY - rect.top) / rect.height) * 2 + 1
+        ((clientX - rect.left) / rect.width)  * 2 - 1,
+       -((clientY - rect.top)  / rect.height) * 2 + 1
       );
       raycaster.setFromCamera(mousePx, cam);
       const target = new THREE.Vector3();
       raycaster.ray.intersectPlane(plane, target);
-      mouse3D.copy(target).applyMatrix4(particles.matrixWorld.clone().invert());
-    });
-    hero.addEventListener('mouseleave', () => mouse3D.set(9999, 9999, 9999));
+      mouse3D.copy(target);
+    }
+
+    if (isMobile) {
+      hero.addEventListener('touchmove', e => {
+        e.preventDefault();
+        updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: false });
+      hero.addEventListener('touchend', () => mouse3D.set(9999, 9999, 9999));
+    } else {
+      hero.addEventListener('mousemove', e => updatePointer(e.clientX, e.clientY));
+      hero.addEventListener('mouseleave', () => mouse3D.set(9999, 9999, 9999));
+    }
 
     // --- ANIMATION ---
-    let rotY = 0;
     function animate() {
       requestAnimationFrame(animate);
-      rotY += 0.007;
-      particles.rotation.y = rotY;
-      particles.rotation.x = -0.8
-      plane.normal.copy(cam.position).normalize();
-
-      const localMouse = mouse3D.clone();
-      const pos = particles.geometry.attributes.position;
 
       for (let i = 0; i < COUNT; i++) {
         const ix = i*3, iy = ix+1, iz = ix+2;
+
+        // Advance home position forward — particle springs toward it each frame
+        homePositions[iz] += DRIFT;
+        if (homePositions[iz] > Z_NEAR) {
+          // Wrap to back with a fresh random x, y
+          homePositions[iz] -= DEPTH;
+          homePositions[ix] = (Math.random() * 2 - 1) * halfW;
+          homePositions[iy] = (Math.random() * 2 - 1) * halfH;
+          positions[ix] = homePositions[ix];
+          positions[iy] = homePositions[iy];
+          positions[iz] = homePositions[iz];
+          velocities[ix] = velocities[iy] = velocities[iz] = 0;
+        }
+
         const px = positions[ix], py = positions[iy], pz = positions[iz];
         const hx = homePositions[ix], hy = homePositions[iy], hz = homePositions[iz];
-        const dx = px - localMouse.x, dy = py - localMouse.y, dz = pz - localMouse.z;
+        const dx = px - mouse3D.x, dy = py - mouse3D.y, dz = pz - mouse3D.z;
         const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
         if (dist < 1.2 && dist > 0.001) {
-          const f = ((1.2 - dist) / 1.2) * 3.0 / dist; /*Repel Strength*/
+          const f = ((1.2 - dist) / 1.2) * 3.0 / dist;
           velocities[ix] += dx * f; velocities[iy] += dy * f; velocities[iz] += dz * f;
         }
         velocities[ix] += (hx - px) * 0.08;
@@ -236,7 +259,7 @@
         positions[iz] += velocities[iz];
       }
 
-      pos.needsUpdate = true;
+      pGeo.attributes.position.needsUpdate = true;
       renderer.render(scene, cam);
     }
     animate();

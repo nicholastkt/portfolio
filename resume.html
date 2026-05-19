@@ -6,16 +6,47 @@
   <title>Resume — Nicholas Tan</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="resume.css">
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}());</script>
 </head>
 <body>
   <nav>
     <a href="index.html" class="nav-logo">Nicholas Tan</a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="projects.html">Projects</a>
-      <a href="resume.html" class="active">Resume</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="resume.html" class="active">Resume</a>
+      </div>
+      <button class="theme-toggle" aria-label="Toggle theme">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </button>
+      <button class="nav-burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+  <script>
+    (function() {
+      const nav = document.querySelector('nav');
+      const burger = nav.querySelector('.nav-burger');
+      burger.addEventListener('click', () => {
+        const open = nav.classList.toggle('open');
+        burger.setAttribute('aria-expanded', open);
+      });
+      nav.querySelectorAll('.nav-links a').forEach(a =>
+        a.addEventListener('click', () => {
+          nav.classList.remove('open');
+          burger.setAttribute('aria-expanded', false);
+        })
+      );
+      document.querySelector('.theme-toggle').addEventListener('click', () => {
+        const html = document.documentElement;
+        const isLight = html.getAttribute('data-theme') === 'light';
+        html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        localStorage.setItem('theme', isLight ? 'dark' : 'light');
+      });
+    })();
+  </script>
 
   <div class="page-wrap">
 
@@ -33,7 +64,7 @@
           <a href="https://www.linkedin.com/in/nicholastan-0204" target="_blank" class="contact-chip">in LinkedIn</a>
         </div>
         <div style="margin-top: 1.5rem; display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="assets/Resume_Nicholas_Tan.pdf" download class="btn btn-primary">Download PDF</a>
+          <a href="assets/Resume_Nicholas_Tan.pdf" download class="btn btn-outline">Download PDF</a>
         </div>
       </div>
     </div>
