@@ -53,13 +53,42 @@
   <section id="hero">
     <!-- Particle canvas will be injected here by JS -->
     <div class="hero-tag">Available for opportunities</div>
-    <h1 style="margin-left: 4rem; margin-right: 4rem;">Hi, I'm <span><br>Nicholas Tan</br></span><br>Automation Developer / Process Analyst & aspiring UI/UX Developer.</h1>
+    <h1 style="margin-left: 4rem; margin-right: 4rem;">Hi, I'm <span><br>Nicholas Tan</br></span><br>Automation Developer / Process Analyst & aspiring UX Developer.</h1>
     <p class="hero-sub" style="margin-left:4rem; margin-right: 4rem;">An experienced automation developer and process analyst with a keen interest in UI/UX design, I am passionate in creating efficient solutions and intuitive user experiences.</p>
     <div class="hero-cta">
       <a href="projects.html" class="btn btn-outline">View my work</a>
       <a href="resume.html" class="btn btn-outline">View resume</a>
     </div>
   </section>
+  <script>
+    (function () {
+      var sub     = document.querySelector('.hero-sub');
+      var cta     = document.querySelector('.hero-cta');
+      var full    = sub.textContent.trim();
+      var CHAR_MS = 12;   // ms per character — lower = faster typing
+      var START   = 1850; // ms — fires right after hero-tag finishes
+
+      // Reserve the element's natural height so layout doesn't shift
+      sub.style.minHeight = sub.getBoundingClientRect().height + 'px';
+      sub.textContent = '';
+      sub.classList.add('typing-cursor');
+
+      // Push the CTA animation delay to fire after typing completes
+      cta.style.animationDelay = (START + full.length * CHAR_MS + 200) + 'ms';
+
+      setTimeout(function () {
+        var i = 0;
+        (function type() {
+          if (i < full.length) {
+            sub.textContent = full.slice(0, ++i);
+            setTimeout(type, CHAR_MS);
+          } else {
+            sub.classList.remove('typing-cursor');
+          }
+        })();
+      }, START);
+    })();
+  </script>
   <div class="scroll-divider">
     <div class="scroll-line"></div>
     <div class="scroll-icon">

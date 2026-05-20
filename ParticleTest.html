@@ -268,7 +268,7 @@
     renderer.domElement.addEventListener('touchstart', e => {
       e.preventDefault();
       isDragging = true;
-      autoRotate = false;
+      if (!isMobile) autoRotate = false;
       prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       updateRepelFromTouch(e.touches[0]);
     }, { passive: false });
@@ -278,10 +278,12 @@
       if (e.touches.length === 1) {
         const touch = e.touches[0];
         updateRepelFromTouch(touch);
-        const dx = touch.clientX - prevMouse.x;
-        const dy = touch.clientY - prevMouse.y;
-        rotY += dx * 0.005;
-        rotX += dy * 0.005;
+        if (!isMobile) {
+          const dx = touch.clientX - prevMouse.x;
+          const dy = touch.clientY - prevMouse.y;
+          rotY += dx * 0.005;
+          rotX += dy * 0.005;
+        }
         prevMouse = { x: touch.clientX, y: touch.clientY };
       } else if (e.touches.length === 2) {
         // Pinch to zoom
@@ -332,7 +334,7 @@
       countSlider.max = 10000;
       countSlider.value = particleCount;
       countVal.textContent = particleCount;
-      document.getElementById('hint').textContent = 'Touch to repel · Pinch to zoom · Drag to rotate';
+      document.getElementById('hint').textContent = 'Touch to repel · Pinch to zoom';
     }
 
     // --- ANIMATION LOOP ---

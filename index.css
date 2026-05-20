@@ -103,3 +103,44 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(5px); }
 }
+
+/* ── TYPEWRITER CURSOR ────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.typing-cursor::after {
+  content: '|';
+  display: inline-block;
+  margin-left: 1px;
+  font-weight: 300;
+  animation: blink 0.55s step-end infinite;
+  color: var(--accent);
+}
+
+/* ── HERO ENTRANCE ANIMATIONS ─────────────────────────── */
+@keyframes heroZoom {
+  from { opacity: 0; transform: scale(0.72); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes bubblePop {
+  0%   { opacity: 0; transform: scale(0.15); }
+  50%  { opacity: 1; transform: scale(1.22); }
+  70%  { transform: scale(0.92); }
+  85%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes slideFromLeft {
+  from { opacity: 0; transform: translateX(-42px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+#hero h1 {
+  animation: heroZoom 2.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-tag {
+  animation: bubblePop 0.65s ease-out 1.2s both;
+}
+.hero-cta {
+  animation: slideFromLeft 0.55s cubic-bezier(0.22, 1, 0.36, 1) 1.85s both;
+}
