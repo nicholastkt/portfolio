@@ -14,6 +14,29 @@
       font-family: system-ui, sans-serif; pointer-events: none; white-space: nowrap;
     }
 
+    /* ── QUOTES ── */
+    #quote-wrap {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; pointer-events: none;
+      z-index: 10; width: min(600px, 85vw);
+    }
+    #quote-text {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      font-style: italic; line-height: 1.7;
+      color: rgba(20, 20, 20, 0.45);
+      opacity: 0; transition: opacity 1.2s ease;
+    }
+    #quote-attr {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+      letter-spacing: 0.06em;
+      color: rgba(20, 20, 20, 0.25);
+      margin-top: 0.6rem;
+      opacity: 0; transition: opacity 1.2s ease;
+    }
+
     /* ── UI PANEL ── */
     #panel {
       position: fixed; top: 50%; right: 0; transform: translateY(-50%);
@@ -80,6 +103,12 @@
 <body>
   <canvas id="fluid"></canvas>
   <p id="hint">Move or click · touch to paint</p>
+
+  <!-- QUOTES -->
+  <div id="quote-wrap">
+    <p id="quote-text"></p>
+    <p id="quote-attr"></p>
+  </div>
 
   <!-- UI PANEL -->
   <div id="panel">
@@ -739,6 +768,16 @@
       cg.style.pointerEvents = e.target.checked ? 'none' : 'auto';
     });
 
+    function updateQuoteColor(hex) {
+      const r = parseInt(hex.slice(1,3),16)/255;
+      const g = parseInt(hex.slice(3,5),16)/255;
+      const b = parseInt(hex.slice(5,7),16)/255;
+      const luma = 0.299*r + 0.587*g + 0.114*b;
+      const isDark = luma < 0.5;
+      document.getElementById('quote-text').style.color = isDark ? 'rgba(255,255,255,0.55)' : 'rgba(20,20,20,0.45)';
+      document.getElementById('quote-attr').style.color = isDark ? 'rgba(255,255,255,0.3)'  : 'rgba(20,20,20,0.25)';
+    }
+
     document.getElementById('ctrl-bg').addEventListener('input', e => {
       const hex = e.target.value;
       document.body.style.background = hex;
@@ -747,7 +786,10 @@
         g: parseInt(hex.slice(3,5),16)/255,
         b: parseInt(hex.slice(5,7),16)/255,
       };
+      updateQuoteColor(hex);
     });
+
+    updateQuoteColor(document.getElementById('ctrl-bg').value);
 
     document.getElementById('ctrl-paused').addEventListener('change', e => {
       config.PAUSED = e.target.checked;
@@ -760,6 +802,52 @@
     document.getElementById('ctrl-color').addEventListener('input', e => {
       config.COLOR = e.target.value;
     });
+
+    // ─── QUOTES ──────────────────────────────────────────────────────────────
+    const quotes = [
+      { text: "Design is not just what it looks like and feels like. Design is how it works.", attr: "— Steve Jobs" },
+      { text: "The details are not the details. They make the design.", attr: "— Charles Eames" },
+      { text: "Simplicity is the ultimate sophistication.", attr: "— Leonardo da Vinci" },
+      { text: "Design is thinking made visual.", attr: "— Saul Bass" },
+      { text: "Creativity is intelligence having fun.", attr: "— Albert Einstein" },
+      { text: "Everything is designed. Few things are designed well.", attr: "— Brian Reed" },
+      { text: "Good design is obvious. Great design is transparent.", attr: "— Joe Sparano" },
+      { text: "The life of a designer is a life of fight against the ugliness.", attr: "— Massimo Vignelli" },
+      { text: "Art is not what you see, but what you make others see.", attr: "— Edgar Degas" },
+      { text: "Color is a power which directly influences the soul.", attr: "— Wassily Kandinsky" },
+    ];
+
+    const quoteText = document.getElementById('quote-text');
+    const quoteAttr = document.getElementById('quote-attr');
+    let quoteIndex = Math.floor(Math.random() * quotes.length);
+
+    const FADE_MS   = 1200;  // matches CSS transition
+    const HOLD_MS   = 8000;  // visible duration
+    const GAP_MS    = 2800;  // pause between quotes
+
+    function showNextQuote() {
+      const q = quotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+
+      quoteText.textContent = `"${q.text}"`;
+      quoteAttr.textContent = q.attr ?? '';
+
+      // Fade in
+      quoteText.style.opacity = '1';
+      quoteAttr.style.opacity = '1';
+
+      // Fade out after hold
+      setTimeout(() => {
+        quoteText.style.opacity = '0';
+        quoteAttr.style.opacity = '0';
+
+        // Next quote after fade-out + gap
+        setTimeout(showNextQuote, FADE_MS + GAP_MS);
+      }, HOLD_MS);
+    }
+
+    // First quote appears after a short settle delay
+    setTimeout(showNextQuote, 2000);
   </script>
 </body>
 </html>
