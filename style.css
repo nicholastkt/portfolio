@@ -80,7 +80,7 @@ h1 span { color: var(--accent); }
 }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: #1aa062; transform: translateY(-1px); }
-.btn-outline { background: transparent; color: var(--text); border: 3px solid var(--border); }
+.btn-outline { background: transparent; color: var(--text); border: 2px solid var(--border); }
 .btn-outline:hover { background: #fbfcfb; transform: translateY(-1px); color: #0a0a0a;}
 
 /* SKILL TAGS */
