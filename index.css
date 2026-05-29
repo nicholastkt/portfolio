@@ -145,3 +145,79 @@
 .hero-cta {
   animation: slideFromLeft 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
 }
+
+/* ── BORDER GLOW BUTTONS ───────────────────────────────── */
+.border-glow-btn {
+  --edge-proximity: 0;
+  --cursor-angle: 45deg;
+  --edge-sensitivity: 15;
+  --color-sensitivity: 30;
+  --glow-padding: 18px;
+  position: relative;
+  isolation: isolate;
+  transform: translate3d(0, 0, 0.01px);
+  overflow: visible !important;
+}
+
+/* Conic gradient ring — rotates with cursor, fades in near edges */
+.border-glow-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: 2px;
+  border-radius: calc(8px + 2px);
+  background: conic-gradient(
+    from var(--cursor-angle),
+    #5B8DEF 0%, #afc8fa 25%, #c084fc 50%, #f472b6 75%, #5B8DEF 100%
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+  pointer-events: none;
+}
+.border-glow-btn:hover::before {
+  opacity: clamp(0, calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity))), 1);
+}
+.border-glow-btn:not(:hover)::before {
+  transition: opacity 0.75s ease-in-out;
+}
+
+/* Outer glow halo */
+.border-glow-btn > .edge-light {
+  position: absolute;
+  inset: calc(var(--glow-padding) * -1);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: conic-gradient(
+    from var(--cursor-angle) at center,
+    black 2.5%, transparent 12%, transparent 88%, black 97.5%
+  );
+  opacity: 0;
+  mix-blend-mode: plus-lighter;
+  transition: opacity 0.25s ease-out;
+}
+.border-glow-btn:hover > .edge-light {
+  opacity: clamp(0, calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity))), 1);
+}
+.border-glow-btn:not(:hover) > .edge-light {
+  transition: opacity 0.75s ease-in-out;
+}
+.border-glow-btn > .edge-light::before {
+  content: '';
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 1px  hsl(220deg 80% 80% / 100%),
+    inset 0 0 4px 0  hsl(220deg 80% 80% / 60%),
+    inset 0 0 12px 0 hsl(220deg 80% 80% / 35%),
+    inset 0 0 24px 0 hsl(220deg 80% 80% / 20%),
+          0 0 4px 0  hsl(220deg 80% 80% / 60%),
+          0 0 12px 0 hsl(220deg 80% 80% / 35%),
+          0 0 28px 2px hsl(220deg 80% 80% / 20%),
+          0 0 50px 4px hsl(220deg 80% 80% / 10%);
+}

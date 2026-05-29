@@ -56,8 +56,8 @@
     <h1 style="margin-left: 4rem; margin-right: 4rem;">Hi, I'm <span><br>Nicholas Tan</br></span><br>Automation Developer / Process Analyst & aspiring UX Developer.</h1>
     <p class="hero-sub" style="margin-left:4rem; margin-right: 4rem;">An experienced automation developer and process analyst with a keen interest in UI/UX design, I am passionate in creating efficient solutions and intuitive user experiences.</p>
     <div class="hero-cta">
-      <a href="projects.html" class="btn btn-outline">View my work</a>
-      <a href="resume.html" class="btn btn-outline">View resume</a>
+      <a href="projects.html" class="btn btn-outline border-glow-btn"><span class="edge-light"></span>View my work</a>
+      <a href="resume.html" class="btn btn-outline border-glow-btn"><span class="edge-light"></span>View resume</a>
     </div>
   </section>
   <script>
@@ -297,6 +297,36 @@
       cam.aspect = hero.offsetWidth / hero.offsetHeight;
       cam.updateProjectionMatrix();
       renderer.setSize(hero.offsetWidth, hero.offsetHeight);
+    });
+  </script>
+
+  <script>
+    // ── BORDER GLOW BUTTONS ───────────────────────────────
+    document.querySelectorAll('.border-glow-btn').forEach(btn => {
+      btn.addEventListener('pointermove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width  / 2;
+        const cy = rect.height / 2;
+        const dx = x - cx, dy = y - cy;
+
+        // How close to the edge (0 = center, 1 = edge)
+        let kx = dx !== 0 ? cx / Math.abs(dx) : Infinity;
+        let ky = dy !== 0 ? cy / Math.abs(dy) : Infinity;
+        const edge = Math.min(Math.max(1 / Math.min(kx, ky), 0), 1) * 100;
+
+        // Angle from center to cursor (0° = top, clockwise)
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (angle < 0) angle += 360;
+
+        btn.style.setProperty('--edge-proximity', edge.toFixed(2));
+        btn.style.setProperty('--cursor-angle', angle.toFixed(2) + 'deg');
+      });
+
+      btn.addEventListener('pointerleave', () => {
+        btn.style.setProperty('--edge-proximity', '0');
+      });
     });
   </script>
 
