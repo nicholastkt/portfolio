@@ -41,8 +41,144 @@
       z-index: 10;
     }
 
+    /* ── MOBILE SHAPE SWIPE ── */
+    #swipe-shape-hint {
+      display: none;
+      position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%);
+      flex-direction: column; align-items: center; gap: 12px;
+      pointer-events: none; z-index: 20;
+      opacity: 1; transition: opacity 0.9s ease;
+    }
+    #swipe-shape-hint.hidden { opacity: 0; }
+    .swipe-lr-anim {
+      position: relative; width: 120px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .swipe-lr-trail {
+      position: absolute; height: 2px; border-radius: 2px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.35), transparent);
+      animation: swipeLRTrail 1.8s ease-in-out infinite;
+    }
+    .swipe-lr-dot {
+      position: absolute; width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 0 14px rgba(255,255,255,0.5), 0 0 28px rgba(255,255,255,0.2);
+      animation: swipeLRDot 1.8s ease-in-out infinite;
+    }
+    .swipe-lr-label {
+      color: rgba(255,255,255,0.35); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: system-ui, sans-serif;
+    }
+    @keyframes swipeLRDot {
+      0%   { transform: translateX(-32px); opacity: 0.25; }
+      30%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: translateX(32px); opacity: 0.25; }
+    }
+    @keyframes swipeLRTrail {
+      0%   { width: 0;    opacity: 0; }
+      40%  { width: 64px; opacity: 1; }
+      60%  { width: 64px; opacity: 1; }
+      100% { width: 0;    opacity: 0; }
+    }
+
+    #shape-dots {
+      display: none;
+      position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+      gap: 8px; align-items: center; z-index: 10; pointer-events: none;
+    }
+    .shape-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transition: width 0.35s ease, background 0.35s ease, border-radius 0.35s ease;
+    }
+    .shape-dot.active {
+      width: 20px; border-radius: 3px;
+      background: rgba(255,255,255,0.75);
+    }
+
+    #shape-name-flash {
+      display: none;
+      position: fixed; top: 42%; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.6); font-size: 0.85rem; letter-spacing: 0.2em;
+      text-transform: uppercase; font-family: system-ui, sans-serif;
+      pointer-events: none; z-index: 20;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+
+    /* ── INFO BACKDROP ── */
+    #info-backdrop {
+      position: fixed; inset: 0; z-index: 29;
+      background: rgba(10, 10, 15, 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    #info-backdrop.visible { opacity: 1; }
+
+    /* ── INFO PANEL ── */
+    #info-panel {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(600px, 88vw); text-align: left;
+      pointer-events: none; z-index: 30;
+      opacity: 0; transition: opacity 0.6s ease;
+    }
+    #info-panel.visible { opacity: 1; }
+    .info-title {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(1rem, 2.4vw, 1.15rem); font-weight: 600;
+      color: rgba(255,255,255,0.9); margin-bottom: 0.35rem;
+    }
+    .info-sub {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.72rem, 1.5vw, 0.82rem);
+      color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 1.3rem;
+    }
+    .info-section { margin-bottom: 1rem; }
+    .info-section-title {
+      font-family: system-ui, sans-serif;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 0.45rem;
+    }
+    .info-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .info-items li {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.7rem, 1.4vw, 0.8rem);
+      color: rgba(255,255,255,0.55); line-height: 1.55;
+      padding-left: 1em; position: relative;
+    }
+    .info-items li::before { content: '·'; position: absolute; left: 0; color: rgba(255,255,255,0.25); }
+    .info-items li strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+    /* ── INFO BUTTON ── */
+    #info-btn {
+      position: fixed; bottom: 52px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: system-ui, sans-serif;
+      padding: 6px 18px; border-radius: 20px; cursor: pointer;
+      z-index: 50; white-space: nowrap;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    #info-btn:hover {
+      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.75);
+    }
+    #info-btn.active {
+      background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85);
+    }
+
     @media (max-width: 768px) {
       #ui { display: none; }
+      #hint { display: none; }
+      #swipe-shape-hint { display: flex; }
+      #shape-dots { display: flex; }
+      #shape-name-flash { display: block; }
+      #info-btn { bottom: 24px; left: auto; right: 16px; transform: none; }
     }
   </style>
 </head>
@@ -87,6 +223,73 @@
 
   <p id="hint">Move mouse over the shape · Scroll to zoom · Click & drag to rotate</p>
 
+  <!-- Mobile: swipe hint -->
+  <div id="swipe-shape-hint">
+    <div class="swipe-lr-anim">
+      <div class="swipe-lr-trail"></div>
+      <div class="swipe-lr-dot"></div>
+    </div>
+    <span class="swipe-lr-label">← swipe to change shape →</span>
+  </div>
+
+  <!-- Mobile: shape position dots -->
+  <div id="shape-dots">
+    <div class="shape-dot active"></div>
+    <div class="shape-dot"></div>
+    <div class="shape-dot"></div>
+  </div>
+
+  <!-- Mobile: shape name flash on switch -->
+  <div id="shape-name-flash"></div>
+
+  <div id="info-backdrop"></div>
+
+  <!-- INFO PANEL -->
+  <div id="info-panel">
+    <p class="info-title">Particle Explorer</p>
+    <p class="info-sub">An interactive 3D particle system built with <strong style="color:rgba(255,255,255,0.65)">Three.js</strong> and WebGL. Thousands of particles are distributed across a 3D surface and respond to your cursor in real time.</p>
+
+    <div class="info-section">
+      <p class="info-section-title">How it works</p>
+      <ul class="info-items">
+        <li>Particles are sampled uniformly across the triangles of a 3D geometry using <strong>area-weighted random sampling</strong></li>
+        <li>Each particle has a <strong>home position</strong> on the surface; a spring force constantly pulls it back</li>
+        <li>When the cursor comes within the repel radius, an outward force pushes particles away — the result is the fluid scatter effect</li>
+        <li>Velocity is dampened each frame (×0.82) so particles settle smoothly rather than oscillating</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">Shapes</p>
+      <ul class="info-items">
+        <li><strong>Sphere</strong> — particles distributed across a subdivided sphere (64×64 segments)</li>
+        <li><strong>Torus</strong> — a donut shape; the inner ring has lower triangle density so sampling is area-weighted to stay even</li>
+        <li><strong>Box</strong> — six subdivided faces; particles concentrate along edges where triangles meet</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">Desktop controls</p>
+      <ul class="info-items">
+        <li><strong>Particle Count</strong> — more particles = higher fidelity surface, heavier CPU cost</li>
+        <li><strong>Repel Radius / Strength</strong> — how far and how forcefully the cursor disturbs the field</li>
+        <li><strong>Particle Size</strong> — rendered as screen-space billboard sprites with size attenuation</li>
+        <li>Scroll to zoom · click and drag to rotate the shape freely</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">Mobile gestures</p>
+      <ul class="info-items">
+        <li><strong>Swipe left / right</strong> — cycles through the three shapes</li>
+        <li><strong>Touch and drag</strong> — repels particles from your finger</li>
+        <li><strong>Pinch</strong> — zooms the camera in and out</li>
+      </ul>
+    </div>
+  </div>
+
+  <button id="info-btn">ⓘ about</button>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     // --- SCENE SETUP ---
@@ -112,6 +315,10 @@
     let isDragging = false, prevMouse = { x: 0, y: 0 };
     let autoRotate = true;
     let lastPinchDist = null;
+    const shapes = ['sphere', 'torus', 'box'];
+    let shapeIndex = 0;
+    let swipeStartX = 0, swipeStartY = 0, isHorizSwipe = false;
+    const SWIPE_THRESHOLD = 55;
 
     // --- CIRCLE SPRITE ---
     const spriteCanvas = document.createElement('canvas');
@@ -267,26 +474,41 @@
 
     renderer.domElement.addEventListener('touchstart', e => {
       e.preventDefault();
-      isDragging = true;
-      if (!isMobile) autoRotate = false;
-      prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      updateRepelFromTouch(e.touches[0]);
+      if (e.touches.length === 1) {
+        swipeStartX = e.touches[0].clientX;
+        swipeStartY = e.touches[0].clientY;
+        isHorizSwipe = false;
+        isDragging = true;
+        if (!isMobile) autoRotate = false;
+        prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        updateRepelFromTouch(e.touches[0]);
+      }
     }, { passive: false });
 
     renderer.domElement.addEventListener('touchmove', e => {
       e.preventDefault();
       if (e.touches.length === 1) {
         const touch = e.touches[0];
-        updateRepelFromTouch(touch);
-        if (!isMobile) {
-          const dx = touch.clientX - prevMouse.x;
-          const dy = touch.clientY - prevMouse.y;
-          rotY += dx * 0.005;
-          rotX += dy * 0.005;
+        const totalDx = touch.clientX - swipeStartX;
+        const totalDy = touch.clientY - swipeStartY;
+
+        // Lock into horizontal swipe early if movement is clearly lateral
+        if (!isHorizSwipe && Math.abs(totalDx) > 12 && Math.abs(totalDx) > Math.abs(totalDy) * 1.5) {
+          isHorizSwipe = true;
+          mouse3D.set(9999, 9999, 9999); // cancel repel for this gesture
+        }
+
+        if (!isHorizSwipe) {
+          updateRepelFromTouch(touch);
+          if (!isMobile) {
+            const dx = touch.clientX - prevMouse.x;
+            const dy = touch.clientY - prevMouse.y;
+            rotY += dx * 0.005;
+            rotX += dy * 0.005;
+          }
         }
         prevMouse = { x: touch.clientX, y: touch.clientY };
       } else if (e.touches.length === 2) {
-        // Pinch to zoom
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         const dist = Math.sqrt(dx*dx + dy*dy);
@@ -298,17 +520,65 @@
 
     renderer.domElement.addEventListener('touchend', e => {
       if (e.touches.length === 0) {
+        // Detect completed horizontal swipe
+        if (isHorizSwipe && e.changedTouches.length > 0) {
+          const totalDx = e.changedTouches[0].clientX - swipeStartX;
+          const totalDy = e.changedTouches[0].clientY - swipeStartY;
+          if (Math.abs(totalDx) >= SWIPE_THRESHOLD && Math.abs(totalDx) > Math.abs(totalDy)) {
+            switchShape(shapeIndex + (totalDx < 0 ? 1 : -1));
+          }
+        }
         isDragging = false;
+        isHorizSwipe = false;
         mouse3D.set(9999, 9999, 9999);
       }
       if (e.touches.length < 2) lastPinchDist = null;
     });
+
+    // --- MOBILE SHAPE SWITCHING ---
+    const shapeDots  = document.querySelectorAll('.shape-dot');
+    const nameFlash  = document.getElementById('shape-name-flash');
+    const swipeHint  = document.getElementById('swipe-shape-hint');
+    let swipeHintGone = false;
+
+    function switchShape(index) {
+      shapeIndex = ((index % shapes.length) + shapes.length) % shapes.length;
+      currentShape = shapes[shapeIndex];
+      buildParticles(currentShape, particleCount);
+      autoRotate = true;
+
+      // Update dots
+      shapeDots.forEach((d, i) => d.classList.toggle('active', i === shapeIndex));
+
+      // Flash shape name
+      nameFlash.textContent = currentShape;
+      nameFlash.style.opacity = '1';
+      clearTimeout(nameFlash._t);
+      nameFlash._t = setTimeout(() => { nameFlash.style.opacity = '0'; }, 1200);
+
+      // Dismiss swipe hint on first use
+      if (!swipeHintGone) {
+        swipeHintGone = true;
+        swipeHint.classList.add('hidden');
+        setTimeout(() => swipeHint.remove(), 900);
+      }
+    }
+
+    // Auto-dismiss swipe hint after 5 s
+    setTimeout(() => {
+      if (!swipeHintGone) {
+        swipeHintGone = true;
+        swipeHint.classList.add('hidden');
+        setTimeout(() => swipeHint.remove(), 900);
+      }
+    }, 5000);
 
     // --- UI CONTROLS ---
     document.querySelectorAll('.sbtn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.sbtn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        shapeIndex = shapes.indexOf(btn.dataset.shape);
         currentShape = btn.dataset.shape;
         buildParticles(currentShape, particleCount);
         autoRotate = true;
@@ -392,6 +662,20 @@
       cam.aspect = innerWidth / (innerHeight - 60);
       cam.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight - 60);
+    });
+
+    // --- INFO PANEL ---
+    const infoBtn      = document.getElementById('info-btn');
+    const infoPanel    = document.getElementById('info-panel');
+    const infoBackdrop = document.getElementById('info-backdrop');
+    let infoPanelOpen  = false;
+
+    infoBtn.addEventListener('click', () => {
+      infoPanelOpen = !infoPanelOpen;
+      infoBtn.classList.toggle('active', infoPanelOpen);
+      infoBtn.textContent = infoPanelOpen ? '✕ close' : 'ⓘ about';
+      infoPanel.classList.toggle('visible', infoPanelOpen);
+      infoBackdrop.classList.toggle('visible', infoPanelOpen);
     });
   </script>
 
