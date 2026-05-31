@@ -14,6 +14,48 @@
       font-family: system-ui, sans-serif; pointer-events: none; white-space: nowrap;
     }
 
+    /* ── SWIPE HINT ── */
+    #swipe-hint {
+      position: fixed; bottom: 18%; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      pointer-events: none; z-index: 20;
+      opacity: 1; transition: opacity 0.9s ease;
+    }
+    #swipe-hint.hidden { opacity: 0; }
+
+    .swipe-anim {
+      position: relative; width: 110px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .swipe-trail {
+      position: absolute; height: 2px; border-radius: 2px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.35), transparent);
+      animation: swipeTrail 1.8s ease-in-out infinite;
+    }
+    .swipe-dot {
+      position: absolute; width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 0 14px rgba(255,255,255,0.5), 0 0 28px rgba(255,255,255,0.2);
+      animation: swipeDot 1.8s ease-in-out infinite;
+    }
+    .swipe-label {
+      color: rgba(255,255,255,0.4); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: system-ui, sans-serif;
+    }
+    @keyframes swipeDot {
+      0%   { transform: translateX(-32px); opacity: 0.25; }
+      30%  { opacity: 1; }
+      70%  { opacity: 1; }
+      100% { transform: translateX(32px); opacity: 0.25; }
+    }
+    @keyframes swipeTrail {
+      0%   { width: 0;    opacity: 0; }
+      40%  { width: 64px; opacity: 1; }
+      60%  { width: 64px; opacity: 1; }
+      100% { width: 0;    opacity: 0; }
+    }
+
     /* ── QUOTES ── */
     #quote-wrap {
       position: fixed; top: 50%; left: 50%;
@@ -35,6 +77,65 @@
       color: rgba(255, 255, 255, 0.99);
       margin-top: 0.6rem;
       opacity: 0; transition: opacity 1.2s ease;
+    }
+
+    /* ── INFO PANEL ── */
+    #info-panel {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(620px, 88vw); text-align: left;
+      pointer-events: none; z-index: 10;
+      opacity: 0; transition: opacity 0.6s ease;
+    }
+    #info-panel.visible { opacity: 1; }
+    .info-title {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(1rem, 2.4vw, 1.15rem); font-weight: 600;
+      color: rgba(255,255,255,0.9); margin-bottom: 0.35rem;
+    }
+    .info-sub {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.72rem, 1.5vw, 0.82rem);
+      color: rgba(255,255,255,0.4); line-height: 1.6; margin-bottom: 1.3rem;
+    }
+    .info-section { margin-bottom: 1rem; }
+    .info-section-title {
+      font-family: system-ui, sans-serif;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 0.45rem;
+    }
+    .info-items { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .info-items li {
+      font-family: system-ui, sans-serif;
+      font-size: clamp(0.7rem, 1.4vw, 0.8rem);
+      color: rgba(255,255,255,0.55); line-height: 1.55;
+      padding-left: 1em; position: relative;
+    }
+    .info-items li::before { content: '·'; position: absolute; left: 0; color: rgba(255,255,255,0.25); }
+    .info-items li strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+    .info-items li code {
+      font-family: 'Courier New', monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    /* ── INFO BUTTON ── */
+    #info-btn {
+      position: fixed; bottom: 52px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 0.1em;
+      text-transform: uppercase; font-family: system-ui, sans-serif;
+      padding: 6px 18px; border-radius: 20px; cursor: pointer;
+      z-index: 50; white-space: nowrap;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    #info-btn:hover {
+      background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.75);
+    }
+    #info-btn.active {
+      background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85);
     }
 
     /* ── UI PANEL ── */
@@ -104,11 +205,69 @@
   <canvas id="fluid"></canvas>
   <p id="hint">Move or click · touch to paint</p>
 
+  <!-- SWIPE HINT -->
+  <div id="swipe-hint">
+    <div class="swipe-anim">
+      <div class="swipe-trail"></div>
+      <div class="swipe-dot"></div>
+    </div>
+    <span class="swipe-label">touch &amp; drag to paint</span>
+  </div>
+
   <!-- QUOTES -->
   <div id="quote-wrap">
     <p id="quote-text"></p>
     <p id="quote-attr"></p>
   </div>
+
+  <!-- INFO PANEL -->
+  <div id="info-panel">
+    <p class="info-title">Splash Cursor</p>
+    <p class="info-sub">Originally a <strong>React component</strong> from the <strong>react-bits</strong> library by David Hdev, ported here to vanilla JavaScript and raw WebGL for exploration and customisation — no external libraries or frameworks in this version.</p>
+
+    <div class="info-section">
+      <p class="info-section-title">Origin</p>
+      <ul class="info-items">
+        <li>Source: <strong>SplashCursor</strong> from <strong>react-bits</strong> — a collection of animated React UI components</li>
+        <li>The original uses <strong>React hooks</strong> (<code>useEffect</code>, <code>useRef</code>) to manage the WebGL lifecycle inside a component</li>
+        <li>Ported by removing JSX, replacing hooks with direct DOM references, and extracting the WebGL pipeline into plain JS</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">How it works</p>
+      <ul class="info-items">
+        <li>Velocity and dye fields are stored as floating-point GPU textures</li>
+        <li>Each frame runs: <strong>curl → vorticity → divergence → pressure solve → gradient subtract → advection</strong></li>
+        <li>Mouse and touch splats inject force and colour into both fields simultaneously</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">GLSL shader programs</p>
+      <ul class="info-items">
+        <li><strong>Splat</strong> — injects velocity and dye at the pointer position using a Gaussian kernel</li>
+        <li><strong>Advection</strong> — moves both fields along the velocity using bilinear sampling</li>
+        <li><strong>Divergence / Pressure / Gradient subtract</strong> — Jacobi iteration solving incompressible Navier-Stokes flow</li>
+        <li><strong>Curl / Vorticity</strong> — adds turbulent swirl to prevent artificial damping</li>
+        <li><strong>Display</strong> — composites the dye over the background, switching between additive (dark bg) and subtractive (light bg) rendering</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <p class="info-section-title">Controls (⚙ panel)</p>
+      <ul class="info-items">
+        <li>On desktop, a <strong>live settings panel</strong> is available — click ⚙ on the right edge to open it. Each slider directly rewrites the config the simulation reads every frame, so changes take effect instantly and let you observe how each parameter shapes the fluid in real time</li>
+        <li><strong>Density / Velocity Dissipation</strong> — how quickly colour and motion fade each frame</li>
+        <li><strong>Curl</strong> — turbulence intensity; higher values produce tighter swirls</li>
+        <li><strong>Splat Radius / Force</strong> — brush footprint and how hard each stroke pushes the fluid</li>
+        <li><strong>Rainbow Mode off</strong> — lets you pick a fixed splash colour; the display shader auto-adapts to the background</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- INFO BUTTON -->
+  <button id="info-btn">ⓘ about</button>
 
   <!-- UI PANEL -->
   <div id="panel">
@@ -803,6 +962,23 @@
       config.COLOR = e.target.value;
     });
 
+    // ─── SWIPE HINT ──────────────────────────────────────────────────────────
+    (function () {
+      const hint = document.getElementById('swipe-hint');
+      let gone = false;
+      function dismiss() {
+        if (gone) return;
+        gone = true;
+        hint.classList.add('hidden');
+        setTimeout(() => hint.remove(), 900);
+        window.removeEventListener('mousedown',  dismiss);
+        window.removeEventListener('touchstart', dismiss);
+      }
+      window.addEventListener('mousedown',  dismiss, { once: false });
+      window.addEventListener('touchstart', dismiss, { once: false });
+      setTimeout(dismiss, 4000); // auto-hide after 4 s
+    })();
+
     // ─── QUOTES ──────────────────────────────────────────────────────────────
     const quotes = [
       { text: "Design is not just what it looks like and feels like. Design is how it works.", attr: "— Steve Jobs" },
@@ -821,33 +997,54 @@
     const quoteAttr = document.getElementById('quote-attr');
     let quoteIndex = Math.floor(Math.random() * quotes.length);
 
-    const FADE_MS   = 1200;  // matches CSS transition
-    const HOLD_MS   = 8000;  // visible duration
-    const GAP_MS    = 2800;  // pause between quotes
+    const FADE_MS = 1200;
+    const HOLD_MS = 8000;
+    const GAP_MS  = 2800;
+
+    let quoteTimer  = null;
+    let infoPaused  = false;
+
+    function clearQuoteTimers() { clearTimeout(quoteTimer); quoteTimer = null; }
 
     function showNextQuote() {
+      if (infoPaused) return;
       const q = quotes[quoteIndex];
       quoteIndex = (quoteIndex + 1) % quotes.length;
 
       quoteText.textContent = `"${q.text}"`;
       quoteAttr.textContent = q.attr ?? '';
-
-      // Fade in
       quoteText.style.opacity = '1';
       quoteAttr.style.opacity = '1';
 
-      // Fade out after hold
-      setTimeout(() => {
+      quoteTimer = setTimeout(() => {
         quoteText.style.opacity = '0';
         quoteAttr.style.opacity = '0';
-
-        // Next quote after fade-out + gap
-        setTimeout(showNextQuote, FADE_MS + GAP_MS);
+        quoteTimer = setTimeout(showNextQuote, FADE_MS + GAP_MS);
       }, HOLD_MS);
     }
 
-    // First quote appears after a short settle delay
-    setTimeout(showNextQuote, 2000);
+    quoteTimer = setTimeout(showNextQuote, 2000);
+
+    // ─── INFO PANEL TOGGLE ────────────────────────────────────────────────────
+    const infoBtn   = document.getElementById('info-btn');
+    const infoPanel = document.getElementById('info-panel');
+
+    infoBtn.addEventListener('click', () => {
+      infoPaused = !infoPaused;
+      infoBtn.classList.toggle('active', infoPaused);
+      infoBtn.textContent = infoPaused ? '✕ close' : 'ⓘ about';
+      infoPanel.classList.toggle('visible', infoPaused);
+
+      if (infoPaused) {
+        // Immediately hide any visible quote and cancel pending timers
+        clearQuoteTimers();
+        quoteText.style.opacity = '0';
+        quoteAttr.style.opacity = '0';
+      } else {
+        // Resume after a short delay so the fade-out of info feels clean
+        quoteTimer = setTimeout(showNextQuote, 800);
+      }
+    });
   </script>
 </body>
 </html>
