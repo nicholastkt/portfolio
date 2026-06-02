@@ -3,7 +3,7 @@
 }
 
 /* FILTER TABS */
-.filter-tabs { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+.filter-tabs { display: flex; gap: 8px; margin-bottom: 3rem; flex-wrap: wrap; }
 .filter-btn {
   padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
   border: 1px solid var(--border); background: transparent; color: var(--text-muted);
@@ -12,44 +12,75 @@
 .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
 .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-/* PROJECTS GRID */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+/* PROJECTS LIST */
+.projects-list {
+  display: flex;
+  flex-direction: column;
 }
 
-/* PROJECT CARD */
-.project-card {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+.project-row {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  padding: 4rem 0;
+  border-top: 1px solid var(--border);
 }
-.project-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+.project-row:last-child { border-bottom: 1px solid var(--border); }
+
+/* Alternate: even rows flip image to the right */
+.project-row:nth-child(even) { flex-direction: row-reverse; }
+
+/* Image side */
+.row-image {
+  flex: 0 0 48%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: var(--accent-light);
 }
-.card-thumb {
-  height: 160px; background: var(--accent-light);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.5rem; overflow: hidden;
+.row-image img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.5s ease;
 }
-.card-thumb img { 
-  width: 100%; 
-  height: 100%; 
-  border: none; 
-  object-fit: cover; /*crops image to fill thumb without stretching*/
+.project-row:hover .row-image img { transform: scale(1.04); }
+
+/* Content side */
+.row-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
-.card-body { padding: 1rem 1.25rem 1.25rem; }
+
+.row-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+
 .card-tag {
   display: inline-block; font-size: 11px; font-weight: 500;
   background: var(--accent-light); color: var(--accent);
-  padding: 2px 8px; border-radius: 4px; margin-bottom: 8px;
+  padding: 2px 8px; border-radius: 4px;
 }
-.card-title { font-weight: 600; font-size: 15px; margin-bottom: 0.4rem; }
-.card-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
-.card-link {
-  font-size: 13px; font-weight: 500; color: var(--accent);
-  text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+
+.row-title {
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-weight: 700; margin-bottom: 0.75rem;
+  line-height: 1.2; color: var(--text);
 }
-.card-link:hover { text-decoration: underline; }
+
+.row-desc {
+  color: var(--text-muted); font-size: 0.95rem;
+  line-height: 1.75; margin-bottom: 2rem; flex: 1;
+}
+
+.row-link { align-self: flex-end; }
+
+/* Mobile: always stack image above content */
+@media (max-width: 768px) {
+  .project-row,
+  .project-row:nth-child(even) {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 0;
+  }
+  .row-image { flex: none; width: 100%; }
+  .row-link  { align-self: flex-start; }
+}

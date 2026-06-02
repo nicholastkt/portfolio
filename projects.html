@@ -63,64 +63,60 @@
       <button class="filter-btn">Interactive</button>
     </div>
 
-    <div class="projects-grid">
+    <div class="projects-list">
 
-      <!-- Repeat and edit this card block for each project -->
-      <a href="ParticleTest.html" target="_blank" class="card-link">
-        <div class="project-card">
-          <div class="card-thumb">
-            <img src="assets/Project_CardThumb_1.png" alt="Thumbnail for Interactive Particles project">
-          </div>
-          <!-- Replace the emoji above with an iframe embed from OpenProcessing:
-            <iframe src="https://openprocessing.org/sketch/XXXXXXX/embed/" allowfullscreen></iframe>
-          -->
-          <div class="card-body">
-            <span class="card-tag">Generative</span>
-            <p class="card-title">Interactive Particles</p>
-            <p class="card-desc">An interactive generative sketch exploring particle systems and flow fields.</p>
-            <span class="card-link">View Project →</span>
-          </div>
+      <!-- Row 1 — image left, content right -->
+      <div class="project-row">
+        <div class="row-image">
+          <img src="assets/Project_CardThumb_1.png" alt="Interactive Particles">
         </div>
-      </a>
+        <div class="row-content">
+          <div class="row-tags">
+            <span class="card-tag">Generative</span>
+            <span class="card-tag">Interactive</span>
+            <span class="card-tag">Three.js</span>
+          </div>
+          <h3 class="row-title">Interactive Particles</h3>
+          <p class="row-desc">A real-time 3D particle system built with Three.js where thousands of particles are distributed uniformly across the surface of geometric shapes — sphere, torus, and box — using area-weighted triangle sampling. Each particle is anchored to a home position by a spring force and scattered outward when the cursor draws near, producing a fluid organic repel effect. On desktop, a live control panel lets you tune particle count, repel radius, strength, and size in real time. On mobile, swipe left or right to cycle between shapes and touch to disturb the field.</p>
+          <a href="ParticleTest.html" target="_blank" class="btn btn-outline row-link">View Project →</a>
+        </div>
+      </div>
+
+      <!-- Row 2 — image right, content left -->
+      <div class="project-row">
+        <div class="row-image">
+          <img src="assets/Project_CardThumb_2.png" alt="Ink Simulation">
+        </div>
+        <div class="row-content">
+          <div class="row-tags">
+            <span class="card-tag">Interactive</span>
+            <span class="card-tag">WebGL</span>
+            <span class="card-tag">React</span>
+          </div>
+          <h3 class="row-title">Ink Simulation</h3>
+          <p class="row-desc">A real-time fluid simulation that recreates the swirling of ink dropped into water. Originally a React component from the react-bits library, it was ported to vanilla JavaScript to allow deep exploration and customisation. The simulation runs entirely on the GPU through a pipeline of GLSL shaders — curl, vorticity confinement, divergence, pressure solving, and advection — implementing an incompressible Navier-Stokes fluid solver. A live settings panel on desktop exposes every parameter, and the display shader dynamically switches between additive and subtractive rendering to maintain contrast against any background colour.</p>
+          <a href="SplashCursor.html" target="_blank" class="btn btn-outline row-link">View Project →</a>
+        </div>
+      </div>
+
       <!--
-      <div class="project-card">
-        <div class="card-thumb">🎨</div>
-        <div class="card-body">
-          <span class="card-tag">UI Design</span>
-          <p class="card-title">Dashboard Concept</p>
-          <p class="card-desc">A clean data dashboard UI concept designed in Figma with focus on accessibility and layout.</p>
-          <a href="#" class="card-link">View case study →</a>
+      Row 3 — image left, content right (uncomment when ready)
+      <div class="project-row">
+        <div class="row-image">
+          <img src="assets/Project_CardThumb_3.png" alt="FutureTube UI Redesign">
+        </div>
+        <div class="row-content">
+          <div class="row-tags">
+            <span class="card-tag">UI Design</span>
+            <span class="card-tag">Concept</span>
+          </div>
+          <h3 class="row-title">FutureTube — UI Redesign</h3>
+          <p class="row-desc">A futuristic YouTube interface concept featuring glassmorphism cards, a 3D vertical carousel, and an autumn-to-aurora colour palette with full light and dark mode support.</p>
+          <a href="youtube-redesign/index.html" target="_blank" class="btn btn-outline row-link">View Project →</a>
         </div>
       </div>
       -->
-      <a href="SplashCursor.html" target="_blank" class="card-link">
-        <div class="project-card">
-          <div class="card-thumb">
-            <img src="assets/Project_CardThumb_2.png" alt="Thumbnail for Interactive Particles project">
-          </div>
-          <div class="card-body">
-            <span class="card-tag">Interactive</span>
-            <p class="card-title">Ink Simulation</p>
-            <p class="card-desc">An interactive canvas that mimics the swirling of ink when dropped into water</p>
-            <span class="card-link">View Project →</span>
-          </div>
-        </div>
-      </a>
-      <!--
-      <a href="youtube-redesign/index.html" target="_blank" class="card-link">
-        <div class="project-card">
-          <div class="card-thumb">
-            <img src="assets/Project_CardThumb_3.png" alt="Thumbnail for FutureTube UI Redesign project">
-          </div>
-          <div class="card-body">
-            <span class="card-tag">UI Design</span>
-            <p class="card-title">FutureTube — UI Redesign</p>
-            <p class="card-desc">A futuristic YouTube interface concept featuring glassmorphism cards, a 3D vertical carousel, and an autumn-to-aurora colour palette with light/dark modes.</p>
-            <span class="card-link">View Project →</span>
-          </div>
-        </div>
-      </a>
-      -->
+
     </div>
   </div>
 

@@ -116,7 +116,8 @@
       opacity: 0; pointer-events: none;
       transition: opacity 0.4s ease;
     }
-    #info-backdrop.visible { opacity: 1; }
+    /* Backdrop absorbs touches when open so the canvas doesn't fire */
+    #info-backdrop.visible { opacity: 1; pointer-events: auto; cursor: pointer; }
 
     /* ── INFO PANEL ── */
     #info-panel {
@@ -126,7 +127,12 @@
       pointer-events: none; z-index: 30;
       opacity: 0; transition: opacity 0.6s ease;
     }
-    #info-panel.visible { opacity: 1; }
+    #info-panel.visible {
+      opacity: 1;
+      pointer-events: auto;    /* allow scrolling through content */
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     .info-title {
       font-family: system-ui, sans-serif;
       font-size: clamp(1rem, 2.4vw, 1.15rem); font-weight: 600;
@@ -179,6 +185,15 @@
       #shape-dots { display: flex; }
       #shape-name-flash { display: block; }
       #info-btn { bottom: 24px; left: auto; right: 16px; transform: none; }
+
+      /* Pin panel just below the nav bar and make it scrollable */
+      #info-panel {
+        top: 68px;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-height: calc(100svh - 90px);
+        padding-bottom: 1rem;
+      }
     }
   </style>
 </head>
@@ -670,13 +685,19 @@
     const infoBackdrop = document.getElementById('info-backdrop');
     let infoPanelOpen  = false;
 
-    infoBtn.addEventListener('click', () => {
-      infoPanelOpen = !infoPanelOpen;
-      infoBtn.classList.toggle('active', infoPanelOpen);
-      infoBtn.textContent = infoPanelOpen ? '✕ close' : 'ⓘ about';
-      infoPanel.classList.toggle('visible', infoPanelOpen);
-      infoBackdrop.classList.toggle('visible', infoPanelOpen);
-    });
+    function toggleInfoPanel(open) {
+      infoPanelOpen = open;
+      infoBtn.classList.toggle('active', open);
+      infoBtn.textContent = open ? '✕ close' : 'ⓘ about';
+      infoPanel.classList.toggle('visible', open);
+      infoBackdrop.classList.toggle('visible', open);
+      if (!open) infoPanel.scrollTop = 0; // reset scroll on close
+    }
+
+    infoBtn.addEventListener('click', () => toggleInfoPanel(!infoPanelOpen));
+
+    // Tap the blurred backdrop to close (handy on mobile)
+    infoBackdrop.addEventListener('click', () => toggleInfoPanel(false));
   </script>
 
 </body>
